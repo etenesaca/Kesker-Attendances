@@ -25,7 +25,53 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  * @author edgar
  */
 public class clsConnection_to_OERP {
+    public boolean _test_connection(){
+        XmlRpcClient xmlrpcLogin = new XmlRpcClient();
+        XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
+        xmlrpcConfigLogin.setEnabledForExtensions(true);
+        try {
+            xmlrpcConfigLogin.setServerURL(new URL("http", gl.getHost(), gl.getPort(), "/xmlrpc/common"));
+            xmlrpcLogin.setConfig(xmlrpcConfigLogin);
+        } catch (MalformedURLException ex) {
+            return false;
+        }
+        try {
+            Object res = xmlrpcLogin.execute("check_connectivity", new Vector());
+            return Boolean.parseBoolean(res + "");
+        } catch (Exception e){
+            return false; 
+        }
+    }
+    
+    public void test_connection(){
+        boolean res;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                _test_connection();
+            }
+        });
+        thread.start();
+        long endTimeMillis = System.currentTimeMillis() + 10000;
+        while (thread.isAlive()) {
+            if (System.currentTimeMillis() > endTimeMillis) {
+                gl.connected = false;
+                break;
+            }
+            try {
+                Thread.sleep(500);
+            }
+            catch (InterruptedException t) {}
+        }
+    }
+    
     public String login(String username, String password, String ip, int port, String db) {   
+        test_connection();
+        System.out.println(gl.connected);
+        if (gl.connected == false){
+            return "error_conexion";
+        }
+        System.out.println("hola");
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);

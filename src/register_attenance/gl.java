@@ -39,7 +39,8 @@ public class gl {
     public static Vector collaborator_vector;
     public static int filas;
     public static int size_thumbnails = 36;
-
+    public static boolean connected;        //Indica si se ha podido realizar la conexion al Servidor
+    
     public static boolean isLoad_registereds() {
         return load_registereds;
     }
