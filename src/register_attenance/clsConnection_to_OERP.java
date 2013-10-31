@@ -25,7 +25,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  * @author edgar
  */
 public class clsConnection_to_OERP {
-    public boolean _test_connection(){
+    public boolean test_connection_method(){
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);
@@ -43,12 +43,11 @@ public class clsConnection_to_OERP {
         }
     }
     
-    public void test_connection(){
-        boolean res;
+    public void test_connection_execute(){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                _test_connection();
+                gl.connected = test_connection_method();
             }
         });
         thread.start();
@@ -65,13 +64,16 @@ public class clsConnection_to_OERP {
         }
     }
     
-    public String login(String username, String password, String ip, int port, String db) {   
-        test_connection();
-        System.out.println(gl.connected);
-        if (gl.connected == false){
+    public boolean test_connection(){
+        test_connection_execute();
+        return gl.connected;
+    }
+    
+    public String login_method(String username, String password, String ip, int port, String db) {   
+        if (test_connection() == false){
             return "error_conexion";
         }
-        System.out.println("hola");
+        System.out.println("Continuar");
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);
@@ -123,6 +125,32 @@ public class clsConnection_to_OERP {
             return "error_conexion"; 
         }
     }  
+    
+    public void login_execute(final String username, final String password, final String ip, final int port, final String db) {   
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                gl.login_status = login_method(username, password, ip, port, db);
+            }
+        });
+        thread.start();
+        long endTimeMillis = System.currentTimeMillis() + 10000;
+        while (thread.isAlive()) {
+            if (System.currentTimeMillis() > endTimeMillis) {
+                gl.login_status = "error";
+                break;
+            }
+            try {
+                Thread.sleep(500);
+            }
+            catch (InterruptedException t) {}
+        }
+    }
+    
+    public String login(String username, String password, String ip, int port, String db) {
+        login_execute(username, password, ip, port, db);
+        return gl.login_status;
+    }
 
     public Vector read_user(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
