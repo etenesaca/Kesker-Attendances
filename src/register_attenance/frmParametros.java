@@ -306,7 +306,7 @@ public class frmParametros extends javax.swing.JDialog {
     }//GEN-LAST:event_btnTestConnectionActionPerformed
 
     private void cmbDatabasesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDatabasesFocusGained
-        System.out.print(txtHost.getText());
+        System.out.println(txtHost.getText());
         System.out.print(txtPort.getText());
         recargar_databases();
     }//GEN-LAST:event_cmbDatabasesFocusGained
@@ -335,6 +335,7 @@ public class frmParametros extends javax.swing.JDialog {
     private void cmbDatabasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDatabasesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbDatabasesActionPerformed
+
     
     private void recargar_databases(){
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
