@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -49,6 +50,7 @@ public class frmParametros extends javax.swing.JDialog {
         btnCancelar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         btnTestConnection = new javax.swing.JButton();
+        cmbDatabases = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurar los parámetros de Conexión");
@@ -66,6 +68,40 @@ public class frmParametros extends javax.swing.JDialog {
 
         jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
         jLabel4.setText("Base de Datos:");
+
+        txtHost.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtHostCaretUpdate(evt);
+            }
+        });
+        txtHost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHostActionPerformed(evt);
+            }
+        });
+        txtHost.addHierarchyListener(new java.awt.event.HierarchyListener() {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+                txtHostHierarchyChanged(evt);
+            }
+        });
+        txtHost.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtHostInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                txtHostCaretPositionChanged(evt);
+            }
+        });
+        txtHost.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txtHostPropertyChange(evt);
+            }
+        });
+        txtHost.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                txtHostVetoableChange(evt);
+            }
+        });
 
         btnGuardar.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/kanban-apply.png"))); // NOI18N
@@ -97,6 +133,19 @@ public class frmParametros extends javax.swing.JDialog {
             }
         });
 
+        cmbDatabases.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbDatabases.setName(""); // NOI18N
+        cmbDatabases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbDatabasesActionPerformed(evt);
+            }
+        });
+        cmbDatabases.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                cmbDatabasesFocusGained(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,7 +159,7 @@ public class frmParametros extends javax.swing.JDialog {
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
@@ -118,13 +167,17 @@ public class frmParametros extends javax.swing.JDialog {
                             .addComponent(jLabel2))
                         .addGap(4, 4, 4)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDb)
                             .addComponent(txtPort)
-                            .addComponent(txtHost))))
+                            .addComponent(txtHost)
+                            .addComponent(cmbDatabases, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(21, 21, 21))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSeparator1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(128, 128, 128)
+                .addComponent(txtDb)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -134,17 +187,19 @@ public class frmParametros extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtDb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(cmbDatabases, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar)
@@ -250,6 +305,47 @@ public class frmParametros extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnTestConnectionActionPerformed
 
+    private void cmbDatabasesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDatabasesFocusGained
+        System.out.print(txtHost.getText());
+        System.out.print(txtPort.getText());
+        recargar_databases();
+    }//GEN-LAST:event_cmbDatabasesFocusGained
+
+    private void txtHostInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtHostInputMethodTextChanged
+    }//GEN-LAST:event_txtHostInputMethodTextChanged
+
+    private void txtHostCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtHostCaretPositionChanged
+    }//GEN-LAST:event_txtHostCaretPositionChanged
+
+    private void txtHostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHostActionPerformed
+    }//GEN-LAST:event_txtHostActionPerformed
+
+    private void txtHostHierarchyChanged(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_txtHostHierarchyChanged
+    }//GEN-LAST:event_txtHostHierarchyChanged
+
+    private void txtHostCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtHostCaretUpdate
+    }//GEN-LAST:event_txtHostCaretUpdate
+
+    private void txtHostVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_txtHostVetoableChange
+    }//GEN-LAST:event_txtHostVetoableChange
+
+    private void txtHostPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtHostPropertyChange
+    }//GEN-LAST:event_txtHostPropertyChange
+
+    private void cmbDatabasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDatabasesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbDatabasesActionPerformed
+    
+    private void recargar_databases(){
+        clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
+        Vector<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(),Integer.parseInt(txtPort.getText()));
+        cmbDatabases.removeAllItems();
+        for (String db : DatabaseList){
+            cmbDatabases.addItem(db);
+        }
+        System.out.println("recargardo");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -295,6 +391,7 @@ public class frmParametros extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnTestConnection;
+    private javax.swing.JComboBox cmbDatabases;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

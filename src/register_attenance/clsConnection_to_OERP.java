@@ -68,12 +68,42 @@ public class clsConnection_to_OERP {
         test_connection_execute();
         return gl.connected;
     }
+  
+    public Vector<String> getDatabaseList(String host, int port){
+        Vector aux = new Vector<String>();
+        XmlRpcClient xmlrpcDb = new XmlRpcClient();
+        XmlRpcClientConfigImpl xmlrpcConfigDb = new XmlRpcClientConfigImpl();
+        xmlrpcConfigDb.setEnabledForExtensions(true);
+        try {
+            xmlrpcConfigDb.setServerURL(new URL("http",host,port,"/xmlrpc/db"));
+            xmlrpcDb.setConfig(xmlrpcConfigDb);
+        } catch (MalformedURLException ex) {
+            
+            return aux;
+        }
+        try {
+            //Retrieve databases
+            Vector<Object> params = new Vector<Object>();
+            Object result = xmlrpcDb.execute("list", params);
+            Object[] a = (Object[]) result;
+
+            Vector<String> res = new Vector<String>();
+            for (int i = 0; i < a.length; i++) {
+                if (a[i] instanceof String)
+                {
+                  res.addElement((String)a[i]);
+                }
+            }
+            return res;
+        } catch (Exception e){
+            return aux; 
+        }
+    }
     
     public String login_method(String username, String password, String ip, int port, String db) {   
         if (test_connection() == false){
             return "error_conexion";
         }
-        System.out.println("Continuar");
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);
