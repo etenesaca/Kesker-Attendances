@@ -45,12 +45,11 @@ public class frmParametros extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         txtHost = new javax.swing.JTextField();
         txtPort = new javax.swing.JTextField();
-        txtDb = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         btnTestConnection = new javax.swing.JButton();
-        cmbDatabases = new javax.swing.JComboBox();
+        cmbDb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurar los parámetros de Conexión");
@@ -133,16 +132,16 @@ public class frmParametros extends javax.swing.JDialog {
             }
         });
 
-        cmbDatabases.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbDatabases.setName(""); // NOI18N
-        cmbDatabases.addActionListener(new java.awt.event.ActionListener() {
+        cmbDb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbDb.setName(""); // NOI18N
+        cmbDb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbDatabasesActionPerformed(evt);
+                cmbDbActionPerformed(evt);
             }
         });
-        cmbDatabases.addFocusListener(new java.awt.event.FocusAdapter() {
+        cmbDb.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                cmbDatabasesFocusGained(evt);
+                cmbDbFocusGained(evt);
             }
         });
 
@@ -169,15 +168,11 @@ public class frmParametros extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtPort)
                             .addComponent(txtHost)
-                            .addComponent(cmbDatabases, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cmbDb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(21, 21, 21))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSeparator1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(128, 128, 128)
-                .addComponent(txtDb)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -194,10 +189,8 @@ public class frmParametros extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(cmbDatabases, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                    .addComponent(cmbDb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -223,9 +216,13 @@ public class frmParametros extends javax.swing.JDialog {
                 resp = false;
             }
             else{
-               if ("".equals(this.txtDb.getText())){
+               String selected_db = "";
+               try {
+                 selected_db = cmbDb.getSelectedItem().toString();
+               } catch (Exception e) {}
+               if ("".equals(selected_db)){
                     JOptionPane.showMessageDialog(null, "Ingresa el Nombre de la Base de Datos a la cual se va a conectar.","Aviso", JOptionPane.WARNING_MESSAGE);
-                    this.txtDb.requestFocus();
+                    this.cmbDb.requestFocus();
                     resp = false;
                 }
                 else{
@@ -237,7 +234,11 @@ public class frmParametros extends javax.swing.JDialog {
     }
     void Test_Connection(){
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
-        String resp_login = con_oerp.login("test","6JtigKav8QQkqOpCcE3TMYYKtRtJzGG3hxcIAEe/ywQ=", txtHost.getText(), Integer.parseInt(txtPort.getText()), txtDb.getText());
+        String selected_db = "";
+        try {
+          selected_db = cmbDb.getSelectedItem().toString();
+        } catch (Exception e) {}
+        String resp_login = con_oerp.login("test","6JtigKav8QQkqOpCcE3TMYYKtRtJzGG3hxcIAEe/ywQ=", txtHost.getText(), Integer.parseInt(txtPort.getText()), selected_db);
         if ("error_conexion".equals(resp_login)){
             JOptionPane.showMessageDialog(null, "Error de Conexión.","Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -264,10 +265,14 @@ public class frmParametros extends javax.swing.JDialog {
             "Aceptar");
             if (eleccion == JOptionPane.YES_OPTION)
             {
+                String selected_db = "";
+                try {
+                  selected_db = cmbDb.getSelectedItem().toString();
+                } catch (Exception e) {}
                 try {
                     gl.setHost(txtHost.getText());
                     gl.setPort(txtPort.getText());
-                    gl.setDb(txtDb.getText());
+                    gl.setDb(selected_db);
                     this.dispose();
                 } catch (IOException ex) {
                     Logger.getLogger(frmParametros.class.getName()).log(Level.SEVERE, null, ex);
@@ -288,7 +293,9 @@ public class frmParametros extends javax.swing.JDialog {
         centrarVentana();
         txtHost.setText(gl.getHost());
         txtPort.setText("" + gl.getPort());
-        txtDb.setText(gl.getDb());
+        
+        recargar_databases();
+        cmbDb.setSelectedItem(gl.getDb());
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -305,11 +312,14 @@ public class frmParametros extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnTestConnectionActionPerformed
 
-    private void cmbDatabasesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDatabasesFocusGained
-        System.out.println(txtHost.getText());
-        System.out.print(txtPort.getText());
+    private void cmbDbFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbDbFocusGained
+        String current_db = "";
+        try {
+            current_db = cmbDb.getSelectedItem().toString();
+        } catch (Exception e) {}
         recargar_databases();
-    }//GEN-LAST:event_cmbDatabasesFocusGained
+        cmbDb.setSelectedItem(current_db);
+    }//GEN-LAST:event_cmbDbFocusGained
 
     private void txtHostInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtHostInputMethodTextChanged
     }//GEN-LAST:event_txtHostInputMethodTextChanged
@@ -332,19 +342,17 @@ public class frmParametros extends javax.swing.JDialog {
     private void txtHostPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtHostPropertyChange
     }//GEN-LAST:event_txtHostPropertyChange
 
-    private void cmbDatabasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDatabasesActionPerformed
+    private void cmbDbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDbActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmbDatabasesActionPerformed
-
+    }//GEN-LAST:event_cmbDbActionPerformed
     
     private void recargar_databases(){
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
         Vector<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(),Integer.parseInt(txtPort.getText()));
-        cmbDatabases.removeAllItems();
+        cmbDb.removeAllItems();
         for (String db : DatabaseList){
-            cmbDatabases.addItem(db);
+            cmbDb.addItem(db);
         }
-        System.out.println("recargardo");
     }
     
     /**
@@ -392,12 +400,11 @@ public class frmParametros extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnTestConnection;
-    private javax.swing.JComboBox cmbDatabases;
+    private javax.swing.JComboBox cmbDb;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField txtDb;
     private javax.swing.JTextField txtHost;
     private javax.swing.JTextField txtPort;
     // End of variables declaration//GEN-END:variables
