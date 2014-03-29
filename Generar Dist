@@ -1,0 +1,14 @@
+- Cada ves que se genere el dist desde netneans se debe copiar la carpeta "Config" en la carpeta "dist"
+
+- Generar un version distribuible
+	Cada ves que se quiera dsitribuir una version se debe colocar la carpeta "Config" juntos con el jar de proyecto,
+	deberia estar de esta forma.
+
+	Carpeta Distribuible
+	==========================================
+	Register-Attendance.jar (se puede cambiar el nombre de este archivo)
+	Config
+	lib
+	icon.png (Opcional)
+	README.TXT (Opcional)
+
