@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package register_attenance;
+package register_attenance.forms;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -21,6 +21,8 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*; 
+import register_attenance.Collaborator;
+import register_attenance.gl;
 
 /**
  *

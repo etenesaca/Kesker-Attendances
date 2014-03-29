@@ -485,7 +485,7 @@ public class clsConnection_to_OERP {
         return Eventos;
     }
     
-    enum RespRegistrarAsisitencia{
+    public enum RespRegistrarAsisitencia{
         Error_login,
         No_Collaborator,
         No_staff,

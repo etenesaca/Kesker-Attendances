@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package register_attenance;
+package register_attenance.forms;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -12,6 +12,8 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import register_attenance.clsConnection_to_OERP;
+import register_attenance.gl;
 
 /**
  *

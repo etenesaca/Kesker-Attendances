@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package register_attenance;
+package register_attenance.forms;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -24,6 +24,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import register_attenance.Collaborator;
+import register_attenance.Event;
+import register_attenance.gl;
+import register_attenance.clsConnection_to_OERP;
 /**
  *
  * @author edgar
@@ -703,14 +707,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Foto", "Nombre", "Registrado"
+                "ID", "Foto", "Nombre", "Registrado", "Estado"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -723,17 +727,18 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         });
         tblCollaborators.setFocusable(false);
         tblCollaborators.setGridColor(java.awt.Color.white);
-        tblCollaborators.setTableHeader(null);
         jScrollPane2.setViewportView(tblCollaborators);
-        tblCollaborators.getColumnModel().getColumn(0).setMinWidth(0);
-        tblCollaborators.getColumnModel().getColumn(0).setPreferredWidth(0);
-        tblCollaborators.getColumnModel().getColumn(0).setMaxWidth(0);
-        tblCollaborators.getColumnModel().getColumn(1).setMinWidth(40);
-        tblCollaborators.getColumnModel().getColumn(1).setPreferredWidth(40);
-        tblCollaborators.getColumnModel().getColumn(1).setMaxWidth(40);
-        tblCollaborators.getColumnModel().getColumn(3).setMinWidth(20);
-        tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(20);
-        tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(20);
+        if (tblCollaborators.getColumnModel().getColumnCount() > 0) {
+            tblCollaborators.getColumnModel().getColumn(0).setMinWidth(0);
+            tblCollaborators.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tblCollaborators.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblCollaborators.getColumnModel().getColumn(1).setMinWidth(40);
+            tblCollaborators.getColumnModel().getColumn(1).setPreferredWidth(40);
+            tblCollaborators.getColumnModel().getColumn(1).setMaxWidth(40);
+            tblCollaborators.getColumnModel().getColumn(3).setMinWidth(20);
+            tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(20);
+            tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(20);
+        }
 
         txtCollaborator.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -917,7 +922,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                         .addComponent(pnlcollaborators, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(12, 12, 12))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                         .addComponent(frmRegistrar_asistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 16, Short.MAX_VALUE)))
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
