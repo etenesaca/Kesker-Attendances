@@ -1,7 +1,5 @@
 # built application files
-*.apk
-*.ap_
-
+*~
 # files for the dex VM
 *.dex
 
@@ -25,4 +23,4 @@ release.properties
 pom.xml.*
 
 # Folder containing all the Google Play APKs
-apks
+
