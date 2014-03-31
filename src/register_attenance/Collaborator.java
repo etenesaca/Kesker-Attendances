@@ -12,13 +12,21 @@ import javax.swing.ImageIcon;
  * @author edgar
  */
 public class Collaborator {
-    private String Id, Name, Nickname, Code;
+    private String Id, Name, Username, Nickname, Code;
     private int Point;
     private byte[] Photo;
     private boolean registrado;
 
     public boolean isRegistrado() {
         return registrado;
+    }
+
+    public String getUsername() {
+        return Username;
+    }
+
+    public void setUsername(String Username) {
+        this.Username = Username;
     }
 
     public void setRegistrado(boolean registrado) {

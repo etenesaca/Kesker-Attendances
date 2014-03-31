@@ -349,15 +349,21 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             for (int i = 0;filas>i; i++) {
                 modelo.removeRow(0);
             }
-            
+            ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png"));
+            ImageIcon AttendaceOUTIcon = new ImageIcon(getClass().getResource("/Imagenes/down_28.png"));
             for (Collaborator colaborador:Colaboradores){
-                Object[] fila = new Object[4]; 
+                Object[] fila = new Object[6]; 
                 //ImageIcon icon = new ImageIcon(getClass().getResource("/Imagenes/col.png"));
-                ImageIcon newIcon = Collaborator.resize_image(colaborador.getPhoto(), gl.size_thumbnails);
+                ImageIcon CollaboratorAvatar = Collaborator.resize_image(colaborador.getPhoto(), gl.size_thumbnails);
                 fila[0] = colaborador.getId();
-                fila[1] = new JLabel(newIcon);
+                fila[1] = new JLabel(CollaboratorAvatar);
                 fila[2] = colaborador.getName();
                 fila[3] = colaborador.isRegistrado();
+                if (colaborador.isRegistrado())
+                    fila[4] = new JLabel(AttendaceINIcon);
+                else
+                    fila[4] = null;
+                fila[5] = colaborador.getUsername();
                 modelo.addRow(fila);
                 tblCollaborators.setRowHeight(40);
             }
@@ -396,7 +402,6 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
         }
         
-        
         String res = "";
         res = "<html>Registrados <b>"+ registradores+"</b>  |  Faltantes <b>"+faltantes+"</b></html>";
         lblcolaboradores_registrados.setText(res);
@@ -418,11 +423,13 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
             DefaultTableModel modelo = (DefaultTableModel)tblCollaborators.getModel();
             int id;
+            ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png")); 
             for (Integer collaborator_id : Colaboradores){
                 for (int i = 0;tblCollaborators.getRowCount()>i; i++) {
                     id = Integer.parseInt("" + modelo.getValueAt(i, 0));
                     if (id == collaborator_id){
                         modelo.setValueAt(true, i, 3);
+                        modelo.setValueAt(new JLabel(AttendaceINIcon), i, 4);
                     }
                 }
                 for (int i = 0;gl.getFilas()>i; i++) {
@@ -431,6 +438,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                     if (id == collaborator_id){
                         try {
                             Coll.set(3, true);
+                            Coll.set(3, new JLabel(AttendaceINIcon));
                             //Coll.setElementAt(true, 3);
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
@@ -707,14 +715,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Foto", "Nombre", "Registrado", "Estado"
+                "ID", "Foto", "Nombre", "Registrado", "", "username"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -727,6 +735,11 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         });
         tblCollaborators.setFocusable(false);
         tblCollaborators.setGridColor(java.awt.Color.white);
+        tblCollaborators.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCollaboratorsMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblCollaborators);
         if (tblCollaborators.getColumnModel().getColumnCount() > 0) {
             tblCollaborators.getColumnModel().getColumn(0).setMinWidth(0);
@@ -738,6 +751,12 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             tblCollaborators.getColumnModel().getColumn(3).setMinWidth(20);
             tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(20);
             tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(20);
+            tblCollaborators.getColumnModel().getColumn(4).setMinWidth(40);
+            tblCollaborators.getColumnModel().getColumn(4).setPreferredWidth(40);
+            tblCollaborators.getColumnModel().getColumn(4).setMaxWidth(40);
+            tblCollaborators.getColumnModel().getColumn(5).setMinWidth(0);
+            tblCollaborators.getColumnModel().getColumn(5).setPreferredWidth(0);
+            tblCollaborators.getColumnModel().getColumn(5).setMaxWidth(0);
         }
 
         txtCollaborator.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1177,6 +1196,19 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         busqueda_de_colaboradores search_obj = new busqueda_de_colaboradores();
         search_obj.start();
     }//GEN-LAST:event_txtCollaboratorKeyReleased
+
+    private void tblCollaboratorsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCollaboratorsMouseClicked
+        if (evt.getClickCount() == 2) {
+         JTable target = (JTable)evt.getSource();
+         int column = target.getSelectedColumn();
+         if (column == 1 || column == 2){
+            int row = target.getSelectedRow();
+            final String Username = (tblCollaborators.getModel().getValueAt(row, 5)).toString();
+            txtusername.setText(Username);
+            txtpassword.requestFocus();
+         }
+        }
+    }//GEN-LAST:event_tblCollaboratorsMouseClicked
     
     /**
      * @param args the command line arguments

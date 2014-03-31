@@ -418,12 +418,13 @@ public class clsConnection_to_OERP {
         Vector<Collaborator> Collaborators = new Vector<Collaborator>();
         for (Object collaborator_dic:colls){
             HashMap current_collaborator = (HashMap) collaborator_dic;
-            String id,nombre;
+            String id,nombre,username;
             boolean registrado;
             byte[] foto;
             
             id = "" + current_collaborator.get("id");
             nombre = "" + current_collaborator.get("name");
+            username = "" + current_collaborator.get("username");
             registrado = Boolean.parseBoolean("" + current_collaborator.get("registered"));
             try {
                 String photo = current_collaborator.get("photo") + "";
@@ -433,6 +434,7 @@ public class clsConnection_to_OERP {
             Collaborator Collaborator_ent = new Collaborator();
             Collaborator_ent.setId(id);
             Collaborator_ent.setName(nombre);
+            Collaborator_ent.setUsername(username);
             Collaborator_ent.setPhoto(foto);
             Collaborator_ent.setRegistrado(registrado);
 
