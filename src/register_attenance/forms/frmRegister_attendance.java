@@ -530,6 +530,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         btnReload = new javax.swing.JButton();
+        btnCloseSession = new javax.swing.JButton();
         lblUsuario = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         lblRestante = new javax.swing.JLabel();
@@ -591,6 +592,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         btnReload.setToolTipText("Recargar los eventos.");
         btnReload.setFocusable(false);
         btnReload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnReload.setName(""); // NOI18N
         btnReload.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -598,6 +600,18 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(btnReload);
+
+        btnCloseSession.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/close_session_16.png"))); // NOI18N
+        btnCloseSession.setToolTipText("Cerrar sesión");
+        btnCloseSession.setFocusable(false);
+        btnCloseSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCloseSession.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCloseSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseSessionActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnCloseSession);
 
         lblUsuario.setFont(lblUsuario.getFont().deriveFont(lblUsuario.getFont().getSize()-3f));
         lblUsuario.setForeground(new java.awt.Color(148, 136, 136));
@@ -1209,6 +1223,24 @@ public class frmRegister_attendance extends javax.swing.JFrame {
          }
         }
     }//GEN-LAST:event_tblCollaboratorsMouseClicked
+
+    private void btnCloseSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseSessionActionPerformed
+        Object [] opciones ={"Aceptar","Cancelar"};
+        int eleccion = JOptionPane.showOptionDialog(null,
+        "¿Estás seguro de Cerrar la Sesión ahora?",
+        "Confirmar",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        opciones,
+        "Aceptar");
+        if (eleccion == JOptionPane.YES_OPTION)
+        {
+            this.dispose();
+            frmLogin flogin = new frmLogin();
+            flogin.setVisible(rootPaneCheckingEnabled);
+        }
+    }//GEN-LAST:event_btnCloseSessionActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1247,6 +1279,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         gl.setLoad_registereds(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCloseSession;
     private javax.swing.JButton btnOk;
     private javax.swing.JButton btnReload;
     private javax.swing.ButtonGroup buttonGroup1;
