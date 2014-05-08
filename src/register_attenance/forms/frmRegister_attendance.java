@@ -438,7 +438,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                     if (id == collaborator_id){
                         try {
                             Coll.set(3, true);
-                            Coll.set(3, new JLabel(AttendaceINIcon));
+                            Coll.set(4, new JLabel(AttendaceINIcon));
                             //Coll.setElementAt(true, 3);
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
@@ -748,9 +748,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             tblCollaborators.getColumnModel().getColumn(1).setMinWidth(40);
             tblCollaborators.getColumnModel().getColumn(1).setPreferredWidth(40);
             tblCollaborators.getColumnModel().getColumn(1).setMaxWidth(40);
-            tblCollaborators.getColumnModel().getColumn(3).setMinWidth(20);
-            tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(20);
-            tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(20);
+            tblCollaborators.getColumnModel().getColumn(3).setMinWidth(0);
+            tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(0);
+            tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(0);
             tblCollaborators.getColumnModel().getColumn(4).setMinWidth(40);
             tblCollaborators.getColumnModel().getColumn(4).setPreferredWidth(40);
             tblCollaborators.getColumnModel().getColumn(4).setMaxWidth(40);

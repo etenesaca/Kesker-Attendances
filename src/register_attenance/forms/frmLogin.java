@@ -202,7 +202,7 @@ public class frmLogin extends javax.swing.JFrame {
                         this.txtusername.requestFocus();
                     }
                     else{
-                        JOptionPane.showMessageDialog(null, "Bienvenido de nuevo " + resp_login + "." ,"Bienvenido", JOptionPane.INFORMATION_MESSAGE);
+                        //JOptionPane.showMessageDialog(null, "Bienvenido de nuevo " + resp_login + "." ,"Bienvenido", JOptionPane.INFORMATION_MESSAGE);
                         frmRegister_attendance frmreg = new frmRegister_attendance();
                         this.dispose();
                         frmreg.setVisible(rootPaneCheckingEnabled);

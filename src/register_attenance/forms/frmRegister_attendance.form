@@ -406,7 +406,7 @@
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="20" minWidth="20" prefWidth="20" resizable="true">
+                    <Column maxWidth="0" minWidth="0" prefWidth="0" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
