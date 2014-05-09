@@ -4,15 +4,17 @@
  */
 package register_attenance.forms;
 
+import java.awt.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.Calendar;
-
-import java.awt.*; 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +22,11 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import javax.swing.*; 
+import javax.swing.*;
 import register_attenance.Collaborator;
+import register_attenance.OpenERP;
 import register_attenance.gl;
+import register_attenance.hupernikao;
 
 /**
  *
@@ -47,14 +51,41 @@ public class frmOK extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jFrame1 = new javax.swing.JFrame();
         lblHora_de_registro = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
-        btnOK = new javax.swing.JButton();
         lblPhoto = new javax.swing.JLabel();
         lblPuntos = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstActivities = new jclist.jcList();
+        btnOK = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setModal(true);
@@ -68,21 +99,8 @@ public class frmOK extends javax.swing.JDialog {
 
         lblNombre.setText("Colaborador");
 
-        btnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/kanban-apply.png"))); // NOI18N
-        btnOK.setMnemonic('A');
-        btnOK.setText("Aceptar");
-        btnOK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOKActionPerformed(evt);
-            }
-        });
-        btnOK.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btnOKKeyPressed(evt);
-            }
-        });
-
         lblPhoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/collaborator.png"))); // NOI18N
+        lblPhoto.setText("sdsds");
 
         lblPuntos.setText("Puntos");
 
@@ -98,6 +116,49 @@ public class frmOK extends javax.swing.JDialog {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Hora de registro:");
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Tareas Asignadas"));
+        jPanel2.setToolTipText("");
+        jPanel2.setName(""); // NOI18N
+
+        lstActivities.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        lstActivities.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstActivities.setAlignmentX(2.6F);
+        lstActivities.setColorNoSeleccionado(new java.awt.Color(13, 111, 16));
+        lstActivities.setColorSeleccionado(new java.awt.Color(13, 111, 16));
+        lstActivities.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        lstActivities.setIconoNoSeleccionado(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/check_16.png"))); // NOI18N
+        lstActivities.setIconoSeleccionado(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/check_16.png"))); // NOI18N
+        jScrollPane1.setViewportView(lstActivities);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+        );
+
+        btnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/kanban-apply.png"))); // NOI18N
+        btnOK.setMnemonic('A');
+        btnOK.setText("Aceptar");
+        btnOK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOKActionPerformed(evt);
+            }
+        });
+        btnOK.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnOKKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,45 +166,56 @@ public class frmOK extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblHora_de_registro, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblHora_de_registro, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNombre)
-                    .addComponent(jLabel3))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNombre)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPuntos)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblHora_de_registro)
+                            .addComponent(jLabel5))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPuntos)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblHora_de_registro)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
                 .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -159,9 +231,9 @@ public class frmOK extends javax.swing.JDialog {
         // Se obtienen las dimensiones en pixels de la ventana.
         Dimension ventana = getSize();
         // Una cuenta para situar la ventana en el centro de la pantalla.
-        setLocation((pantalla.width - ventana.width) / 2,(pantalla.height - ventana.height) / 2);
+        setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
     }
-    
+
     private static Image getImage(byte[] bytes, boolean isThumbnail) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         Iterator readers = ImageIO.getImageReadersByFormatName("png");
@@ -176,28 +248,28 @@ public class frmOK extends javax.swing.JDialog {
         Image img = reader.read(0, param);
         return img;
     }
-    
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         centrarVentana();
         String hora_str;
-        Calendar Cal= Calendar.getInstance();
+        Calendar Cal = Calendar.getInstance();
         //String fec= Cal.get(Cal.DATE)+"/"+(Cal.get(Cal.MONTH)+1)+"/"+Cal.get(Cal.YEAR)+" "+Cal.get(Cal.HOUR_OF_DAY)+":"+Cal.get(Cal.MINUTE)+":"+Cal.get(Cal.SECOND);
         //Capturar Hora
         String hora = "" + Cal.get(Calendar.HOUR_OF_DAY);
-        if (hora.length() < 2){
+        if (hora.length() < 2) {
             hora = "0" + hora;
         }
         //Capturar Minutos
         String minutos = "" + Cal.get(Calendar.MINUTE);
-        if (minutos.length() < 2){
+        if (minutos.length() < 2) {
             minutos = "0" + minutos;
         }
         //Capturar Segundos
         String segundos = "" + Cal.get(Calendar.SECOND);
-        if (segundos.length() < 2){
+        if (segundos.length() < 2) {
             segundos = "0" + segundos;
         }
-        
+
         hora_str = hora + ":" + minutos + ":" + segundos;
         //lblCodigo.setText(gl.Login_Collaborator.getCode());
         lblNombre.setText(gl.Login_Collaborator.getNickname());
@@ -205,17 +277,40 @@ public class frmOK extends javax.swing.JDialog {
         lblHora_de_registro.setText(hora_str);
         ImageIcon newIcon = Collaborator.resize_image(gl.Login_Collaborator.getPhoto(), 96);
         lblPhoto.setIcon(newIcon);
-        
+
+        //Listar las actividades asignadas
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+
+        int event_id = gl.Current_event.getId();
+        //Object res = oerp.read("kemas.event", Long.parseLong(gl.Current_event.getId() + ""), new String[]{"service_id"});
+        ArrayList<Object> args = new ArrayList<Object>();
+        args.add(new Object[]{"event_id", "=", event_id});
+        args.add(new Object[]{"collaborator_id", "=", Integer.parseInt(gl.Login_Collaborator.getId())});
+
+        String model = "kemas.event.collaborator.line";
+        Long[] line_ids = oerp.search(model, args);
+        List<HashMap<String, Object>> lines = oerp.read(model, line_ids, new String[]{"activity_ids"});
+
+        for (HashMap<String, Object> line : lines) {
+            Object[] activity_ids = (Object[]) line.get("activity_ids");
+            List<HashMap<String, Object>> activities = oerp.read("kemas.activity", activity_ids, new String[]{"name"});
+            DefaultListModel mdlactivities = new DefaultListModel();
+            for (HashMap<String, Object> activity : activities) {
+                mdlactivities.addElement(activity.get("name"));
+            }
+            lstActivities.setModel(mdlactivities);
+        }
+
         this.setTitle("Registro de asistencia agregado Correctamente.");
         btnOK.requestFocus();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnOKKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnOKKeyPressed
-        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13){
+        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13) {
             this.dispose();
         }
     }//GEN-LAST:event_btnOKKeyPressed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -259,12 +354,17 @@ public class frmOK extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOK;
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblHora_de_registro;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPhoto;
     private javax.swing.JLabel lblPuntos;
+    private jclist.jcList lstActivities;
     // End of variables declaration//GEN-END:variables
 }
