@@ -2,8 +2,39 @@ package register_attenance;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class OpenERP extends OpenERPConnection {
+     /**
+     * Este Metodo devuelve todos los colaboradores que han registrado asistencia en un evento
+     */
+    public List<HashMap<String, Object>> getCollaboratorsRegistereds(int event_id) {
+        XmlRpcClient client = build_xmlrcp_client(mUrl);
+
+        Vector<Object> params = new Vector<Object>();
+        params.add(getDatabase());
+        params.add(getUserId());
+        params.add(getPassword());
+        params.add("kemas.event");
+        params.add("get_collaborators_registered");
+        params.add(event_id);
+
+        List<HashMap<String, Object>> Collaborators = new ArrayList<HashMap<String, Object>>();
+        try {
+            Object[] Records = (Object[]) client.execute("execute", params);
+            for (Object Record : Records) {
+                Collaborators.add((HashMap<String, Object>) Record);
+            }
+        } catch (XmlRpcException e) {
+        }
+        return Collaborators;
+    }
 
     /**
      * Constructor con el uid en Integer *

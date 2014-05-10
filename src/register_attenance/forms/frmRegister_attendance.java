@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,8 +27,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import register_attenance.Collaborator;
 import register_attenance.Event;
+import register_attenance.OpenERP;
 import register_attenance.gl;
 import register_attenance.clsConnection_to_OERP;
+import register_attenance.hupernikao;
 
 /**
  *
@@ -342,7 +345,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png"));
             ImageIcon AttendaceOUTIcon = new ImageIcon(getClass().getResource("/Imagenes/down_28.png"));
             for (Collaborator colaborador : Colaboradores) {
-                Object[] fila = new Object[6];
+                Object[] fila = new Object[7];
                 //ImageIcon icon = new ImageIcon(getClass().getResource("/Imagenes/col.png"));
                 ImageIcon CollaboratorAvatar = Collaborator.resize_image(colaborador.getPhoto(), gl.size_thumbnails);
                 fila[0] = colaborador.getId();
@@ -350,11 +353,16 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 fila[2] = colaborador.getName();
                 fila[3] = colaborador.isRegistrado();
                 if (colaborador.isRegistrado()) {
-                    fila[4] = new JLabel(AttendaceINIcon);
+                    if (colaborador.isCheckout()) {
+                        fila[6] = new JLabel(AttendaceOUTIcon);
+                    } else {
+                        fila[6] = new JLabel(AttendaceINIcon);
+                    }
                 } else {
-                    fila[4] = null;
+                    fila[6] = null;
                 }
                 fila[5] = colaborador.getUsername();
+
                 modelo.addRow(fila);
                 tblCollaborators.setRowHeight(40);
             }
@@ -406,30 +414,38 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             int port = gl.getPort();
             String db = "" + gl.getDb();
 
-            Vector<Integer> Colaboradores = new Vector<Integer>();
-            try {
-                Colaboradores = clsConnection_to_OERP.get_collaborators_registered(uid, password, ip, port, db, gl.Current_event.getId());
-            } catch (Exception ex) {
-                Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            OpenERP oerp = hupernikao.BuildOpenERPConnection();
+            List<HashMap<String, Object>> Colaboradores = oerp.getCollaboratorsRegistereds(gl.Current_event.getId());;
+
             DefaultTableModel modelo = (DefaultTableModel) tblCollaborators.getModel();
             int id;
             ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png"));
-            for (Integer collaborator_id : Colaboradores) {
+            ImageIcon AttendaceOUTIcon = new ImageIcon(getClass().getResource("/Imagenes/down_28.png"));
+            for (HashMap<String, Object> Colaborador : Colaboradores) {
                 for (int i = 0; tblCollaborators.getRowCount() > i; i++) {
                     id = Integer.parseInt("" + modelo.getValueAt(i, 0));
-                    if (id == collaborator_id) {
+                    if (id == Integer.parseInt(Colaborador.get("collaborator_id").toString())) {
                         modelo.setValueAt(true, i, 3);
-                        modelo.setValueAt(new JLabel(AttendaceINIcon), i, 4);
+                        if (Colaborador.get("checkout_id").toString().equals("false")) {
+                            modelo.setValueAt(new JLabel(AttendaceINIcon), i, 6);
+                        } else {
+                            modelo.setValueAt(true, i, 4);
+                            modelo.setValueAt(new JLabel(AttendaceOUTIcon), i, 6);
+                        }
                     }
                 }
                 for (int i = 0; gl.getFilas() > i; i++) {
                     Vector Coll = (Vector) gl.getCollaborator_vector().get(i);
                     id = Integer.parseInt("" + Coll.get(0));
-                    if (id == collaborator_id) {
+                    if (id == Integer.parseInt(Colaborador.get("collaborator_id").toString())) {
                         try {
                             Coll.set(3, true);
-                            Coll.set(4, new JLabel(AttendaceINIcon));
+                            if (Colaborador.get("checkout_id").toString().equals("false")) {
+                                Coll.set(6, new JLabel(AttendaceINIcon));
+                            } else {
+                                Coll.set(4, true);
+                                Coll.set(6, new JLabel(AttendaceOUTIcon));
+                            }
                             //Coll.setElementAt(true, 3);
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
@@ -724,14 +740,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Foto", "Nombre", "Registrado", "", "username"
+                "ID", "Foto", "Nombre", "In", "Out", "username", ""
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -757,15 +773,18 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             tblCollaborators.getColumnModel().getColumn(1).setMinWidth(40);
             tblCollaborators.getColumnModel().getColumn(1).setPreferredWidth(40);
             tblCollaborators.getColumnModel().getColumn(1).setMaxWidth(40);
-            tblCollaborators.getColumnModel().getColumn(3).setMinWidth(0);
-            tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(0);
-            tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(0);
-            tblCollaborators.getColumnModel().getColumn(4).setMinWidth(40);
-            tblCollaborators.getColumnModel().getColumn(4).setPreferredWidth(40);
-            tblCollaborators.getColumnModel().getColumn(4).setMaxWidth(40);
+            tblCollaborators.getColumnModel().getColumn(3).setMinWidth(20);
+            tblCollaborators.getColumnModel().getColumn(3).setPreferredWidth(20);
+            tblCollaborators.getColumnModel().getColumn(3).setMaxWidth(20);
+            tblCollaborators.getColumnModel().getColumn(4).setMinWidth(20);
+            tblCollaborators.getColumnModel().getColumn(4).setPreferredWidth(20);
+            tblCollaborators.getColumnModel().getColumn(4).setMaxWidth(20);
             tblCollaborators.getColumnModel().getColumn(5).setMinWidth(0);
             tblCollaborators.getColumnModel().getColumn(5).setPreferredWidth(0);
             tblCollaborators.getColumnModel().getColumn(5).setMaxWidth(0);
+            tblCollaborators.getColumnModel().getColumn(6).setMinWidth(40);
+            tblCollaborators.getColumnModel().getColumn(6).setPreferredWidth(40);
+            tblCollaborators.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
         txtCollaborator.addKeyListener(new java.awt.event.KeyAdapter() {

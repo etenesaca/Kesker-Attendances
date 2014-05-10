@@ -16,9 +16,14 @@ public class Collaborator {
     private int Point;
     private byte[] Photo;
     private boolean registrado;
+    private boolean checkout;
 
     public boolean isRegistrado() {
         return registrado;
+    }
+    
+    public boolean isCheckout() {
+        return checkout;
     }
 
     public String getUsername() {

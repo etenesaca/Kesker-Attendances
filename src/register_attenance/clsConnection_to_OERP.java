@@ -370,32 +370,6 @@ public class clsConnection_to_OERP {
         }
     }
 
-    public static Vector<Integer> get_collaborators_registered(int uid, String password, String ip, int port, String db, int event_id) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.event");
-        arg.add("get_collaborators_registered");
-        arg.add(event_id);
-
-        Object[] colls = (Object[]) client.execute("execute", arg);
-        Vector<Integer> Collaborators = new Stack<Integer>();
-        for (Object collaborator_id : colls) {
-            int id;
-            id = Integer.parseInt("" + collaborator_id);
-            Collaborators.add(id);
-        }
-        return Collaborators;
-    }
-
     public static Vector<Collaborator> get_collaborators_for_this_event(int uid, String password, String ip, int port, String db, int event_id) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
