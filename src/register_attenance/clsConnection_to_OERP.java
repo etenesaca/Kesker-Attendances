@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package register_attenance;
+
 import java.util.*;
 import java.text.*;
 //XML-RPC==============================================================
@@ -20,12 +21,14 @@ import java.util.Vector;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 //=====================================================================
+
 /**
  *
  * @author edgar
  */
 public class clsConnection_to_OERP {
-    public boolean test_connection_method(){
+
+    public boolean test_connection_method() {
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);
@@ -38,12 +41,12 @@ public class clsConnection_to_OERP {
         try {
             Object res = xmlrpcLogin.execute("check_connectivity", new Vector());
             return Boolean.parseBoolean(res + "");
-        } catch (Exception e){
-            return false; 
+        } catch (Exception e) {
+            return false;
         }
     }
-    
-    public void test_connection_execute(){
+
+    public void test_connection_execute() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -59,26 +62,26 @@ public class clsConnection_to_OERP {
             }
             try {
                 Thread.sleep(500);
+            } catch (InterruptedException t) {
             }
-            catch (InterruptedException t) {}
         }
     }
-    
-    public boolean test_connection(){
+
+    public boolean test_connection() {
         test_connection_execute();
         return gl.connected;
     }
-  
-    public Vector<String> getDatabaseList(String host, int port){
+
+    public Vector<String> getDatabaseList(String host, int port) {
         Vector aux = new Vector<String>();
         XmlRpcClient xmlrpcDb = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigDb = new XmlRpcClientConfigImpl();
         xmlrpcConfigDb.setEnabledForExtensions(true);
         try {
-            xmlrpcConfigDb.setServerURL(new URL("http",host,port,"/xmlrpc/db"));
+            xmlrpcConfigDb.setServerURL(new URL("http", host, port, "/xmlrpc/db"));
             xmlrpcDb.setConfig(xmlrpcConfigDb);
         } catch (MalformedURLException ex) {
-            
+
             return aux;
         }
         try {
@@ -89,19 +92,18 @@ public class clsConnection_to_OERP {
 
             Vector<String> res = new Vector<String>();
             for (int i = 0; i < a.length; i++) {
-                if (a[i] instanceof String)
-                {
-                  res.addElement((String)a[i]);
+                if (a[i] instanceof String) {
+                    res.addElement((String) a[i]);
                 }
             }
             return res;
-        } catch (Exception e){
-            return aux; 
+        } catch (Exception e) {
+            return aux;
         }
     }
-    
-    public String login_method(String username, String password, String ip, int port, String db) {   
-        if (test_connection() == false){
+
+    public String login_method(String username, String password, String ip, int port, String db) {
+        if (test_connection() == false) {
             return "error_conexion";
         }
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
@@ -119,24 +121,24 @@ public class clsConnection_to_OERP {
             params.addElement(db);
             params.addElement(username);
             params.addElement(password);
-            
+
             Object id;
             try {
                 id = xmlrpcLogin.execute("login", params);
-            } catch (Exception e){
-                return "error_conexion"; 
+            } catch (Exception e) {
+                return "error_conexion";
             }
-            
-            if ("false".equals("" + id)){
+
+            if ("false".equals("" + id)) {
                 return "error_login";
             }
             //Traer los datos del Usuario Logueado
             Vector<Object> user = new Vector<Object>();
             int uid = ((Integer) id).intValue();
             try {
-                user =  read_user(uid, password, ip, port, db);
+                user = read_user(uid, password, ip, port, db);
             } catch (Exception ex) {
-                return "error_conexion"; 
+                return "error_conexion";
             }
             gl.user = user;
             gl.Db = db;
@@ -146,17 +148,18 @@ public class clsConnection_to_OERP {
             boolean is_consultant_login = false;
             try {
                 is_consultant_login = is_register_attedance_login(uid, password, ip, port, db);
-            } catch (Exception ex) {}
-            if (is_consultant_login == false){
+            } catch (Exception ex) {
+            }
+            if (is_consultant_login == false) {
                 return "not_is_consultant_login";
             }
             return nombre;
         } catch (Exception e) {
-            return "error_conexion"; 
+            return "error_conexion";
         }
-    }  
-    
-    public void login_execute(final String username, final String password, final String ip, final int port, final String db) {   
+    }
+
+    public void login_execute(final String username, final String password, final String ip, final int port, final String db) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -172,11 +175,11 @@ public class clsConnection_to_OERP {
             }
             try {
                 Thread.sleep(500);
+            } catch (InterruptedException t) {
             }
-            catch (InterruptedException t) {}
         }
     }
-    
+
     public String login(String username, String password, String ip, int port, String db) {
         login_execute(username, password, ip, port, db);
         return gl.login_status;
@@ -189,7 +192,7 @@ public class clsConnection_to_OERP {
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
 
-        Object[] params2 = { "id", "name", "login", "password", "user_email", "groups_id"};
+        Object[] params2 = {"id", "name", "login", "password", "user_email", "groups_id"};
 
         Vector<Object> arg = new Vector<Object>();
 
@@ -216,18 +219,18 @@ public class clsConnection_to_OERP {
         resp_read.add(groups);
         return resp_read;
     }
-    
+
     public static byte[] decode(byte[] b) throws Exception {
         BASE64Decoder decoder = new BASE64Decoder();
         try {
             byte[] decodedBytes = decoder.decodeBuffer(new String(b));
             return decodedBytes;
-          } catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-          }
+        }
         return null;
     }
-    
+
     public static Collaborator read_collaborator(int uid, String password, String ip, int port, String db, int collaborator_id) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
@@ -235,7 +238,7 @@ public class clsConnection_to_OERP {
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
 
-        Object[] params2 = { "id", "name", "code", "points", "photo"};
+        Object[] params2 = {"id", "name", "code", "points", "photo"};
 
         Vector<Object> arg = new Vector<Object>();
 
@@ -248,17 +251,17 @@ public class clsConnection_to_OERP {
         arg.add(params2);
 
         HashMap ids = (HashMap) client.execute("execute", arg);
-        
+
         String photo = ids.get("photo") + "";
         byte[] dec = clsConnection_to_OERP.decode(photo.getBytes());
         //ImageIcon ii = new ImageIcon(dec);
-        Collaborator resp_collaborator =new Collaborator();
+        Collaborator resp_collaborator = new Collaborator();
         resp_collaborator.setPhoto(dec);
         resp_collaborator.setId("" + ids.get("id"));
         resp_collaborator.setName("" + ids.get("name"));
         resp_collaborator.setCode("" + ids.get("code"));
         resp_collaborator.setPoint(Integer.parseInt("" + ids.get("points")));
-        
+
         String nick_name;
         resp_collaborator.setName("" + ids.get("name"));
         nick_name = clsConnection_to_OERP.name_get(uid, password, ip, port, db, collaborator_id);
@@ -272,7 +275,7 @@ public class clsConnection_to_OERP {
         clientConfig.setEnabledForExtensions(true);
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
-        
+
         Vector<Object> arg = new Vector<Object>();
 
         arg.add(db);
@@ -281,11 +284,11 @@ public class clsConnection_to_OERP {
         arg.add("kemas.collaborator");
         arg.add("get_nick_name");
         arg.add(collaborator_id);
-        
+
         Object resp = client.execute("execute", arg);
         return "" + resp;
     }
-    
+
     public boolean is_register_attedance_login(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
@@ -304,7 +307,7 @@ public class clsConnection_to_OERP {
         Object resp = client.execute("execute", arg);
         return Boolean.parseBoolean(resp + "");
     }
-    
+
     public boolean is_consultant_login(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
@@ -323,7 +326,7 @@ public class clsConnection_to_OERP {
         Object resp = client.execute("execute", arg);
         return Boolean.parseBoolean(resp + "");
     }
-    
+
     public static int get_collaborator_id(int uid, String password, String ip, int port, String db, String username) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
@@ -343,15 +346,14 @@ public class clsConnection_to_OERP {
         Object resp = client.execute("execute", arg);
         return Integer.parseInt("" + resp);
     }
-    
+
     public static HashMap get_next_event(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setEnabledForExtensions(true);
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
-        
-        
+
         Vector<Object> arg = new Vector<Object>();
 
         arg.add(db);
@@ -359,23 +361,22 @@ public class clsConnection_to_OERP {
         arg.add(password);
         arg.add("kemas.event");
         arg.add("get_next_event");
-        
+
         Object event = (Object) client.execute("execute", arg);
-        if (!"false".equals(event.toString())){
+        if (!"false".equals(event.toString())) {
             return (HashMap) event;
-        }
-        else{
+        } else {
             return null;
         }
     }
-    
+
     public static Vector<Integer> get_collaborators_registered(int uid, String password, String ip, int port, String db, int event_id) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setEnabledForExtensions(true);
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
-        
+
         Vector<Object> arg = new Vector<Object>();
 
         arg.add(db);
@@ -384,27 +385,26 @@ public class clsConnection_to_OERP {
         arg.add("kemas.event");
         arg.add("get_collaborators_registered");
         arg.add(event_id);
-        
+
         Object[] colls = (Object[]) client.execute("execute", arg);
         Vector<Integer> Collaborators = new Stack<Integer>();
-        for (Object collaborator_id:colls){
+        for (Object collaborator_id : colls) {
             int id;
             id = Integer.parseInt("" + collaborator_id);
             Collaborators.add(id);
         }
         return Collaborators;
     }
-    
+
     public static Vector<Collaborator> get_collaborators_for_this_event(int uid, String password, String ip, int port, String db, int event_id) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setEnabledForExtensions(true);
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
-        
+
         Vector<Object> arg = new Vector<Object>();
 
-        
         arg.add(db);
         arg.add(uid);
         arg.add(password);
@@ -412,16 +412,16 @@ public class clsConnection_to_OERP {
         arg.add("get_collaborators_by_event");
         arg.add(event_id);
         arg.add(gl.size_thumbnails);
-        
+
         Object[] colls = (Object[]) client.execute("execute", arg);
-        
+
         Vector<Collaborator> Collaborators = new Vector<Collaborator>();
-        for (Object collaborator_dic:colls){
+        for (Object collaborator_dic : colls) {
             HashMap current_collaborator = (HashMap) collaborator_dic;
-            String id,nombre,username;
+            String id, nombre, username;
             boolean registrado;
             byte[] foto;
-            
+
             id = "" + current_collaborator.get("id");
             nombre = "" + current_collaborator.get("name");
             username = "" + current_collaborator.get("username");
@@ -429,8 +429,10 @@ public class clsConnection_to_OERP {
             try {
                 String photo = current_collaborator.get("photo") + "";
                 foto = clsConnection_to_OERP.decode(photo.getBytes());
-            } catch (Exception e) { foto = null;}
-            
+            } catch (Exception e) {
+                foto = null;
+            }
+
             Collaborator Collaborator_ent = new Collaborator();
             Collaborator_ent.setId(id);
             Collaborator_ent.setName(nombre);
@@ -442,14 +444,14 @@ public class clsConnection_to_OERP {
         }
         return Collaborators;
     }
-    
+
     public static Vector<Event> get_today_events(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setEnabledForExtensions(true);
         clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
         client.setConfig(clientConfig);
-        
+
         Vector<Object> arg = new Vector<Object>();
 
         arg.add(db);
@@ -457,11 +459,11 @@ public class clsConnection_to_OERP {
         arg.add(password);
         arg.add("kemas.event");
         arg.add("get_today_events");
-        
+
         Object[] events = (Object[]) client.execute("execute", arg);
-        
+
         Vector<Event> Eventos = new Vector<Event>();
-        for (Object event_dic:events){
+        for (Object event_dic : events) {
             HashMap event = (HashMap) event_dic;
 
             Event event_ent = new Event();
@@ -469,40 +471,43 @@ public class clsConnection_to_OERP {
             event_ent.setName("" + event.get("name"));
             event_ent.setTime_entry("" + event.get("time_entry"));
             event_ent.setTime_entry_int(Integer.parseInt("" + event.get("time_entry_int")));
-            
+
             event_ent.setTime_register("" + event.get("time_register"));
             event_ent.setTime_register_int(Integer.parseInt("" + event.get("time_register_int")));
-            
+
             event_ent.setTime_limit("" + event.get("time_limit"));
             event_ent.setTime_limit_int(Integer.parseInt("" + event.get("time_limit_int")));
-            
+
             event_ent.setTime_start("" + event.get("time_start"));
             event_ent.setTime_start_int(Integer.parseInt("" + event.get("time_start_int")));
             event_ent.setTime_end("" + event.get("time_end"));
             event_ent.setTime_end_int(Integer.parseInt("" + event.get("time_end_int")));
             event_ent.setCurrent_event(Boolean.parseBoolean("" + event.get("current_event")));
-            
+
             Eventos.add(event_ent);
         }
         return Eventos;
     }
-    
-    public enum RespRegistrarAsisitencia{
+
+    public enum RespRegistrarAsisitencia {
+
         Error_login,
         No_Collaborator,
         No_staff,
         No_events,
         Already_register,
+        Already_checkout,
         Ok
     }
+
     public static RespRegistrarAsisitencia register_attendace(int uid, String password, String ip, int port, String db, String reg_username, String reg_password) throws Exception {
         /*
-        r_1    Error en logeo
-        r_2    Logueo correcto pero este Usuario no pertenece a un Colaborador
-        r_3    El colaborador no esta asignado para este evento
-        r_4    No hay eventos para registrar la asistencia
-        r_5    El colaborador ya registro la asistencia
-        */
+         r_1    Error en logeo
+         r_2    Logueo correcto pero este Usuario no pertenece a un Colaborador
+         r_3    El colaborador no esta asignado para este evento
+         r_4    No hay eventos para registrar la asistencia
+         r_5    El colaborador ya registro la asistencia
+         */
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setEnabledForExtensions(true);
@@ -521,33 +526,23 @@ public class clsConnection_to_OERP {
         Object resp = client.execute("execute", arg);
         String _resp = "" + resp;
         RespRegistrarAsisitencia result;
-        if ("r_1".equals(_resp)){
+
+        if ("r_1".equals(_resp)) {
             result = RespRegistrarAsisitencia.Error_login;
+        } else if ("r_2".equals(_resp)) {
+            result = RespRegistrarAsisitencia.No_Collaborator;
+        } else if ("r_3".equals(_resp)) {
+            result = RespRegistrarAsisitencia.No_staff;
+        } else if ("r_4".equals(_resp)) {
+            result = RespRegistrarAsisitencia.No_events;
+        } else if ("r_5".equals(_resp)) {
+            result = RespRegistrarAsisitencia.Already_register;
+        } else if ("r_6".equals(_resp)) {
+            result = RespRegistrarAsisitencia.Already_checkout;
+        } else {
+            result = RespRegistrarAsisitencia.Ok;
         }
-        else{
-            if ("r_2".equals(_resp)){
-                result = RespRegistrarAsisitencia.No_Collaborator;
-            }
-            else{
-                if ("r_3".equals(_resp)){
-                    result = RespRegistrarAsisitencia.No_staff;
-                }
-                else{
-                    if ("r_4".equals(_resp)){
-                        result = RespRegistrarAsisitencia.No_events;
-                    }
-                    else{
-                        if ("r_5".equals(_resp)){
-                            result = RespRegistrarAsisitencia.Already_register;
-                        }
-                        else{
-                            result = RespRegistrarAsisitencia.Ok;
-                        }
-                    }
-                }
-            }
-        }
-        
+
         return result;
     }
 }

@@ -28,63 +28,58 @@ import register_attenance.Collaborator;
 import register_attenance.Event;
 import register_attenance.gl;
 import register_attenance.clsConnection_to_OERP;
+
 /**
  *
  * @author edgar
  */
 public class frmRegister_attendance extends javax.swing.JFrame {
+
     Timer timer_obj;
+
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
                 getImage(getClass().getResource("/Imagenes/icon.png"));
         return retValue;
     }
-    
-    public class IconCellRenderer extends DefaultTableCellRenderer
-    {
+
+    public class IconCellRenderer extends DefaultTableCellRenderer {
+
         /**
-         * Acá redefinimos como se muestra, vemos q ahora lo forzamos a
-         * trabajar con JLabel, pero si no lo es, por ejemplo un String
-         * igual lo muestro llamando a Super
+         * Acá redefinimos como se muestra, vemos q ahora lo forzamos a trabajar
+         * con JLabel, pero si no lo es, por ejemplo un String igual lo muestro
+         * llamando a Super
          */
-            @Override
-        public Component getTableCellRendererComponent (JTable table, Object value, boolean isSelected,boolean hasFocus, int row, int column)
-        {
-        if(value instanceof JLabel)
-        {
-            JLabel label = (JLabel)value;
-                       label.setOpaque(true);
-            fillColor(table,label,isSelected);
-            return label;
-        }
-        else
-        {
-            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof JLabel) {
+                JLabel label = (JLabel) value;
+                label.setOpaque(true);
+                fillColor(table, label, isSelected);
+                return label;
+            } else {
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
         }
 
         /**
-         * Este método es para que pinte el fondo del JLabel cuando
-         * lo seleccionamos para que no quede en blanco, desentonando
-         * con el resto de las celdas que no son JLabel
+         * Este método es para que pinte el fondo del JLabel cuando lo
+         * seleccionamos para que no quede en blanco, desentonando con el resto
+         * de las celdas que no son JLabel
          */
-        public void fillColor(JTable t,JLabel l,boolean isSelected )
-        {
-        if(isSelected)
-        {
-            l.setBackground(t.getSelectionBackground());
-            l.setForeground(t.getSelectionForeground());
-        }
-        else
-        {
-            l.setBackground(t.getBackground());
-            l.setForeground(t.getForeground());
-        }
+        public void fillColor(JTable t, JLabel l, boolean isSelected) {
+            if (isSelected) {
+                l.setBackground(t.getSelectionBackground());
+                l.setForeground(t.getSelectionForeground());
+            } else {
+                l.setBackground(t.getBackground());
+                l.setForeground(t.getForeground());
+            }
         }
     }
 
-    public void Refresh(){
+    public void Refresh() {
         //Cargar Evento del día de hoy
         int uid = Integer.parseInt("" + gl.user.get(0));
         String password = "" + gl.user.get(3);
@@ -101,23 +96,23 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         }
 
         int hour;
-        Calendar Cal= Calendar.getInstance();
+        Calendar Cal = Calendar.getInstance();
         hour = Cal.get(Calendar.HOUR);
 
         Event current_event = null;
         DefaultListModel mdleventos = new DefaultListModel();
-        for (Event event:Eventos){
-            if (event.isCurrent_event()){
+        for (Event event : Eventos) {
+            if (event.isCurrent_event()) {
                 current_event = event;
             }
             mdleventos.addElement(event);
         }
-        lstEventos.setModel(mdleventos);        
+        lstEventos.setModel(mdleventos);
         gl.Current_event = current_event;
         txtusername.setText("");
         txtpassword.setText("");
-        
-        if (current_event != null){
+
+        if (current_event != null) {
             Dimension ventana = new Dimension();
             ventana.setSize(655, 670);
             this.setMinimumSize(ventana);
@@ -133,11 +128,10 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             txtusername.requestFocus();
             pnlNext_event.setVisible(false);
             pnlcollaborators.setVisible(true);
-            
+
             colaboradores_del_evento colaboradores_del_evento_obj = new colaboradores_del_evento(current_event.getId());
             colaboradores_del_evento_obj.start();
-        }
-        else{
+        } else {
             //---Cargar proximo evento---------------
             HashMap Evento = null;
             try {
@@ -166,56 +160,53 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             pnlcollaborators.setVisible(false);
         }
     }
-    private void Actualizar_contadores()
-    {
+
+    private void Actualizar_contadores() {
         try {
-            Calendar Cal= Calendar.getInstance();
+            Calendar Cal = Calendar.getInstance();
             //Modificar indicadores de progreso
-            if (gl.Current_event != null){
+            if (gl.Current_event != null) {
                 int now;
                 now = (Cal.get(Calendar.HOUR_OF_DAY) * 60) + Cal.get(Calendar.MINUTE);
-                int horas_restantes,horas_restantes_mod,minutos_restantes, segundos_restantes, segundos_restantes_mod;
+                int horas_restantes, horas_restantes_mod, minutos_restantes, segundos_restantes, segundos_restantes_mod;
                 segundos_restantes = gl.Current_event.getTime_limit_int() * 60 - (now * 60 + Cal.get(Calendar.SECOND));
                 horas_restantes = (segundos_restantes / 60) / 60;
                 minutos_restantes = (segundos_restantes / 60) % 60;
                 segundos_restantes_mod = segundos_restantes % 60;
 
-                String horas_restantes_str = null,minutos_restantes_str = null,segundos_restantes_str = null;
+                String horas_restantes_str = null, minutos_restantes_str = null, segundos_restantes_str = null;
 
-                if (("" + horas_restantes).length() < 2){
-                    horas_restantes_str = "0" +  horas_restantes;
+                if (("" + horas_restantes).length() < 2) {
+                    horas_restantes_str = "0" + horas_restantes;
+                } else {
+                    horas_restantes_str = "" + horas_restantes;
                 }
-                else{
-                    horas_restantes_str = "" +  horas_restantes;
+                if (("" + minutos_restantes).length() < 2) {
+                    minutos_restantes_str = "0" + minutos_restantes;
+                } else {
+                    minutos_restantes_str = "" + minutos_restantes;
                 }
-                if (("" + minutos_restantes).length() < 2){
-                    minutos_restantes_str = "0" +  minutos_restantes;
+                if (("" + segundos_restantes_mod).length() < 2) {
+                    segundos_restantes_str = "0" + segundos_restantes_mod;
+                } else {
+                    segundos_restantes_str = "" + segundos_restantes_mod;
                 }
-                else{
-                    minutos_restantes_str = "" +  minutos_restantes;
-                }
-                if (("" + segundos_restantes_mod).length() < 2){
-                    segundos_restantes_str = "0" +  segundos_restantes_mod;
-                }
-                else{
-                    segundos_restantes_str = "" +  segundos_restantes_mod;
-                }
-                
+
                 //Marcar los colaboradores que ya hayan registrado su asistencia;
-                if ((Cal.get(Calendar.SECOND) % 15 == 0) && gl.isLoad_registereds()){
+                if ((Cal.get(Calendar.SECOND) % 15 == 0) && gl.isLoad_registereds()) {
                     colaboradores_registrados colaboradores_registrados_obj = new colaboradores_registrados();
                     colaboradores_registrados_obj.start();
                     gl.setLoad_registereds(false);
                 }
-                if (Cal.get(Calendar.SECOND) % 15 != 0 && gl.isLoad_registereds() == false){
+                if (Cal.get(Calendar.SECOND) % 15 != 0 && gl.isLoad_registereds() == false) {
                     gl.setLoad_registereds(true);
                 }
-                
-                if (minutos_restantes < 1 && segundos_restantes < 1){
+
+                if (minutos_restantes < 1 && segundos_restantes < 1) {
                     System.out.println("Danger" + segundos_restantes_str);
                     ReloadInformation();
                 }
-                
+
                 //Modificar barra de Progreso
                 int progress;
                 int seconds_limit;
@@ -227,12 +218,11 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 //Restante-------------------------------------------------
                 //====================================================================
                 segundos_restantes = gl.Current_event.getTime_register_int() * 60 - (now * 60 + Cal.get(Calendar.SECOND));
-                if (segundos_restantes < 1){
+                if (segundos_restantes < 1) {
                     segundos_restantes = 0;
                     lblRestante.setForeground(Color.red);
                     lblRestante_puntual.setForeground(Color.gray);
-                }
-                else{
+                } else {
                     lblRestante.setForeground(Color.blue);
                     lblRestante_puntual.setForeground(Color.black);
                 }
@@ -240,42 +230,37 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 minutos_restantes = (segundos_restantes / 60) % 60;
                 segundos_restantes_mod = segundos_restantes % 60;
 
-
-                if (("" + horas_restantes).length() < 2){
-                    horas_restantes_str = "0" +  horas_restantes;
+                if (("" + horas_restantes).length() < 2) {
+                    horas_restantes_str = "0" + horas_restantes;
+                } else {
+                    horas_restantes_str = "" + horas_restantes;
                 }
-                else{
-                    horas_restantes_str = "" +  horas_restantes;
+                if (("" + minutos_restantes).length() < 2) {
+                    minutos_restantes_str = "0" + minutos_restantes;
+                } else {
+                    minutos_restantes_str = "" + minutos_restantes;
                 }
-                if (("" + minutos_restantes).length() < 2){
-                    minutos_restantes_str = "0" +  minutos_restantes;
-                }
-                else{
-                    minutos_restantes_str = "" +  minutos_restantes;
-                }
-                if (("" + segundos_restantes_mod).length() < 2){
-                    segundos_restantes_str = "0" +  segundos_restantes_mod;
-                }
-                else{
-                    segundos_restantes_str = "" +  segundos_restantes_mod;
+                if (("" + segundos_restantes_mod).length() < 2) {
+                    segundos_restantes_str = "0" + segundos_restantes_mod;
+                } else {
+                    segundos_restantes_str = "" + segundos_restantes_mod;
                 }
 
                 //Modificar barra de Progreso
                 seconds_limit = (gl.Current_event.getTime_register_int() * 60) - (gl.Current_event.getTime_entry_int() * 60);
                 progress = (segundos_restantes * 100) / seconds_limit;
                 pgRestante_puntual.setValue(progress);
-                lblRestante_puntual.setText("Para asistencia puntual " + horas_restantes_str + ":" + minutos_restantes_str + ":" + segundos_restantes_str);            
-            }
-            else{
+                lblRestante_puntual.setText("Para asistencia puntual " + horas_restantes_str + ":" + minutos_restantes_str + ":" + segundos_restantes_str);
+            } else {
                 //Ver cuanto tiempo falta para el proximo evento------
                 load_next_event();
                 //Verficar si ya un evento en curso.
-                if (Cal.get(Calendar.SECOND) > 0 && Cal.get(Calendar.SECOND) < 30 && gl.isLoad_datas()){
+                if (Cal.get(Calendar.SECOND) > 0 && Cal.get(Calendar.SECOND) < 30 && gl.isLoad_datas()) {
                     cargar_eventos_actuales current_obj = new cargar_eventos_actuales();
                     current_obj.start();
                     gl.setLoad_datas(false);
                 }
-                if (Cal.get(Calendar.SECOND) > 30 && Cal.get(Calendar.SECOND) < 60 && gl.isLoad_datas() == false){
+                if (Cal.get(Calendar.SECOND) > 30 && Cal.get(Calendar.SECOND) < 60 && gl.isLoad_datas() == false) {
                     gl.setLoad_datas(true);
                 }
             }
@@ -283,60 +268,65 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             System.out.print(ex.getMessage());
         }
     }
-    private class iTimer implements ActionListener{
+
+    private class iTimer implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent ae) {
             Actualizar_contadores();
-            calcular_hora calcular_hora_obj= new calcular_hora();
+            calcular_hora calcular_hora_obj = new calcular_hora();
             calcular_hora_obj.start();
         }
     }
-    
-    private class busqueda_de_colaboradores extends Thread{
-        public void search(){
-            DefaultTableModel modelo = (DefaultTableModel)tblCollaborators.getModel();
-            int filas=tblCollaborators.getRowCount();
-            for (int i = 0;filas>i; i++) {
+
+    private class busqueda_de_colaboradores extends Thread {
+
+        public void search() {
+            DefaultTableModel modelo = (DefaultTableModel) tblCollaborators.getModel();
+            int filas = tblCollaborators.getRowCount();
+            for (int i = 0; filas > i; i++) {
                 modelo.removeRow(0);
             }
             String nombre_guardado = null, nombre_buscado = null;
             nombre_buscado = txtCollaborator.getText().toLowerCase();
-            for (int i = 0;gl.getFilas()>i; i++) {
+            for (int i = 0; gl.getFilas() > i; i++) {
                 Vector Coll = (Vector) gl.getCollaborator_vector().get(i);
                 nombre_guardado = "" + Coll.get(2);
                 nombre_guardado = nombre_guardado.toLowerCase();
                 int res = nombre_guardado.indexOf(nombre_buscado.toLowerCase());
-                if (nombre_guardado.indexOf(nombre_buscado.toLowerCase()) != -1){
+                if (nombre_guardado.indexOf(nombre_buscado.toLowerCase()) != -1) {
                     Object[] fila = new Object[4];
                     fila[0] = Coll.get(0);
                     fila[1] = Coll.get(1);
                     fila[2] = Coll.get(2);
                     fila[3] = Coll.get(3);
                     modelo.addRow(fila);
-                }  
+                }
             }
             tblCollaborators.setRowHeight(40);
         }
+
         @Override
-        public void run(){
+        public void run() {
             search();
         }
     }
-    
-    private class colaboradores_del_evento extends Thread{
+
+    private class colaboradores_del_evento extends Thread {
+
         private int event_id;
-        
-        public colaboradores_del_evento(int current_event){
+
+        public colaboradores_del_evento(int current_event) {
             this.event_id = current_event;
         }
-        
-        public void load_collaborator(){
+
+        public void load_collaborator() {
             int uid = Integer.parseInt("" + gl.user.get(0));
             String password = "" + gl.user.get(3);
             String ip = gl.getHost();
             int port = gl.getPort();
             String db = "" + gl.getDb();
-        
+
             Vector<Collaborator> Colaboradores = new Vector<Collaborator>();
             try {
                 Colaboradores = clsConnection_to_OERP.get_collaborators_for_this_event(uid, password, ip, port, db, this.event_id);
@@ -344,37 +334,38 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            DefaultTableModel modelo = (DefaultTableModel)tblCollaborators.getModel();
-            int filas=tblCollaborators.getRowCount();
-            for (int i = 0;filas>i; i++) {
+            DefaultTableModel modelo = (DefaultTableModel) tblCollaborators.getModel();
+            int filas = tblCollaborators.getRowCount();
+            for (int i = 0; filas > i; i++) {
                 modelo.removeRow(0);
             }
             ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png"));
             ImageIcon AttendaceOUTIcon = new ImageIcon(getClass().getResource("/Imagenes/down_28.png"));
-            for (Collaborator colaborador:Colaboradores){
-                Object[] fila = new Object[6]; 
+            for (Collaborator colaborador : Colaboradores) {
+                Object[] fila = new Object[6];
                 //ImageIcon icon = new ImageIcon(getClass().getResource("/Imagenes/col.png"));
                 ImageIcon CollaboratorAvatar = Collaborator.resize_image(colaborador.getPhoto(), gl.size_thumbnails);
                 fila[0] = colaborador.getId();
                 fila[1] = new JLabel(CollaboratorAvatar);
                 fila[2] = colaborador.getName();
                 fila[3] = colaborador.isRegistrado();
-                if (colaborador.isRegistrado())
+                if (colaborador.isRegistrado()) {
                     fila[4] = new JLabel(AttendaceINIcon);
-                else
+                } else {
                     fila[4] = null;
+                }
                 fila[5] = colaborador.getUsername();
                 modelo.addRow(fila);
                 tblCollaborators.setRowHeight(40);
             }
-            
+
             int rowCount = modelo.getRowCount();
             int colcount = modelo.getColumnCount();
             Vector<Vector<Object>> copy = new Vector<Vector<Object>>(rowCount);
-            for(int row = 0;row < rowCount;row++) {
+            for (int row = 0; row < rowCount; row++) {
                 Vector<Object> newRow = new Vector<Object>(colcount);
                 copy.add(newRow);
-                for(int col = 0;col < colcount;col++) {
+                for (int col = 0; col < colcount; col++) {
                     newRow.add(modelo.getValueAt(row, col));
                 }
             }
@@ -382,60 +373,60 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             gl.setFilas(tblCollaborators.getRowCount());
             calcular_colaboradores_regitrados();
         }
-        
+
         @Override
-        public void run(){
+        public void run() {
             load_collaborator();
         }
     }
-    
-    public void calcular_colaboradores_regitrados(){
+
+    public void calcular_colaboradores_regitrados() {
         int registradores = 0, faltantes = 0;
-        for (int i = 0;gl.getFilas()>i; i++) {
+        for (int i = 0; gl.getFilas() > i; i++) {
             Vector Coll = (Vector) gl.getCollaborator_vector().get(i);
- 
-            if (Boolean.parseBoolean("" + Coll.get(3))){
-                registradores ++;
-            }
-            else{
-                faltantes ++;
+
+            if (Boolean.parseBoolean("" + Coll.get(3))) {
+                registradores++;
+            } else {
+                faltantes++;
             }
         }
-        
+
         String res = "";
-        res = "<html>Registrados <b>"+ registradores+"</b>  |  Faltantes <b>"+faltantes+"</b></html>";
+        res = "<html>Registrados <b>" + registradores + "</b>  |  Faltantes <b>" + faltantes + "</b></html>";
         lblcolaboradores_registrados.setText(res);
     }
-    
-    private class colaboradores_registrados extends Thread{
-        public void marcar_colaboradores(){
+
+    private class colaboradores_registrados extends Thread {
+
+        public void marcar_colaboradores() {
             int uid = Integer.parseInt("" + gl.user.get(0));
             String password = "" + gl.user.get(3);
             String ip = gl.getHost();
             int port = gl.getPort();
             String db = "" + gl.getDb();
-        
+
             Vector<Integer> Colaboradores = new Vector<Integer>();
             try {
                 Colaboradores = clsConnection_to_OERP.get_collaborators_registered(uid, password, ip, port, db, gl.Current_event.getId());
             } catch (Exception ex) {
                 Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
             }
-            DefaultTableModel modelo = (DefaultTableModel)tblCollaborators.getModel();
+            DefaultTableModel modelo = (DefaultTableModel) tblCollaborators.getModel();
             int id;
-            ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png")); 
-            for (Integer collaborator_id : Colaboradores){
-                for (int i = 0;tblCollaborators.getRowCount()>i; i++) {
+            ImageIcon AttendaceINIcon = new ImageIcon(getClass().getResource("/Imagenes/up_28.png"));
+            for (Integer collaborator_id : Colaboradores) {
+                for (int i = 0; tblCollaborators.getRowCount() > i; i++) {
                     id = Integer.parseInt("" + modelo.getValueAt(i, 0));
-                    if (id == collaborator_id){
+                    if (id == collaborator_id) {
                         modelo.setValueAt(true, i, 3);
                         modelo.setValueAt(new JLabel(AttendaceINIcon), i, 4);
                     }
                 }
-                for (int i = 0;gl.getFilas()>i; i++) {
+                for (int i = 0; gl.getFilas() > i; i++) {
                     Vector Coll = (Vector) gl.getCollaborator_vector().get(i);
                     id = Integer.parseInt("" + Coll.get(0));
-                    if (id == collaborator_id){
+                    if (id == collaborator_id) {
                         try {
                             Coll.set(3, true);
                             Coll.set(4, new JLabel(AttendaceINIcon));
@@ -448,44 +439,48 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
             calcular_colaboradores_regitrados();
         }
+
         @Override
-        public void run(){
+        public void run() {
             marcar_colaboradores();
         }
     }
-    
-    private class cargar_eventos_actuales extends Thread{
+
+    private class cargar_eventos_actuales extends Thread {
+
         @Override
-        public void run(){
+        public void run() {
             ReloadInformation();
         }
     }
-    
-    private class calcular_hora extends Thread{
+
+    private class calcular_hora extends Thread {
+
         Timer temp_obj;
-        
-        private class Temp implements ActionListener{
+
+        private class Temp implements ActionListener {
+
             @Override
             public void actionPerformed(ActionEvent ae) {
                 set_hour();
             }
         }
-        
-        public void set_hour(){
-            Calendar Cal= Calendar.getInstance();
+
+        public void set_hour() {
+            Calendar Cal = Calendar.getInstance();
             //Capturar Hora
             String hora = "" + Cal.get(Calendar.HOUR_OF_DAY);
-            if (hora.length() < 2){
+            if (hora.length() < 2) {
                 hora = "0" + hora;
             }
             //Capturar Minutos
             String minutos = "" + Cal.get(Calendar.MINUTE);
-            if (minutos.length() < 2){
+            if (minutos.length() < 2) {
                 minutos = "0" + minutos;
             }
             //Capturar Segundos
             String segundos = "" + Cal.get(Calendar.SECOND);
-            if (segundos.length() < 2){
+            if (segundos.length() < 2) {
                 segundos = "0" + segundos;
             }
 
@@ -493,28 +488,28 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             lblmin.setText(minutos);
             lblsec.setText(segundos);
         }
-        
+
         @Override
-        public void run(){
+        public void run() {
             temp_obj = new Timer(1000, new Temp());
             temp_obj.start();
         }
     }
-    
+
     /**
      * Creates new form frmRegister_attendance
      */
     public frmRegister_attendance() {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        
+
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 close();
             }
         });
-        tblCollaborators.setDefaultRenderer(Object.class,new frmRegister_attendance.IconCellRenderer());
+        tblCollaborators.setDefaultRenderer(Object.class, new frmRegister_attendance.IconCellRenderer());
     }
 
     /**
@@ -963,21 +958,21 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void centrarVentana() {
         // Se obtienen las dimensiones en pixels de la pantalla.
         Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
         // Se obtienen las dimensiones en pixels de la ventana.
         Dimension ventana = getSize();
         // Una cuenta para situar la ventana en el centro de la pantalla.
-        setLocation((pantalla.width - ventana.width) / 2,(pantalla.height - ventana.height) / 2);
+        setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
     }
-    
+
     DefaultListModel modelo = new DefaultListModel();
-    
-    void load_next_event(){
+
+    void load_next_event() {
         HashMap Evento = gl.getNext_event();
-        if (Evento != null){
+        if (Evento != null) {
             int seconds, minutes, hours, days;
             float sec_base;
             String seconds_base;
@@ -985,176 +980,174 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             sec_base = Float.parseFloat(seconds_base) - gl.getSeconds_sum();
             //Seconds-----------------------------------
             seconds = (int) (sec_base % 60);
-            sec_base = (int)(sec_base / 60);
+            sec_base = (int) (sec_base / 60);
             //Minutes-----------------------------------
             minutes = (int) (sec_base % 60);
-            sec_base = (int)(sec_base / 60);
+            sec_base = (int) (sec_base / 60);
             //Horas-------------------------------------
             hours = (int) (sec_base % 24);
-            sec_base = (int)(sec_base / 24);
+            sec_base = (int) (sec_base / 24);
             //Dias--------------------------------------
             days = (int) sec_base;
-            
-            String horas_restantes_str = null,minutos_restantes_str = null,segundos_restantes_str = null;
-            
-            if (("" + hours).length() < 2){
-                horas_restantes_str = "0" +  hours;
+
+            String horas_restantes_str = null, minutos_restantes_str = null, segundos_restantes_str = null;
+
+            if (("" + hours).length() < 2) {
+                horas_restantes_str = "0" + hours;
+            } else {
+                horas_restantes_str = "" + hours;
             }
-            else{
-                horas_restantes_str = "" +  hours;
+            if (("" + minutes).length() < 2) {
+                minutos_restantes_str = "0" + minutes;
+            } else {
+                minutos_restantes_str = "" + minutes;
             }
-            if (("" + minutes).length() < 2){
-                minutos_restantes_str = "0" +  minutes;
-            }
-            else{
-                minutos_restantes_str = "" +  minutes;
-            }
-            
-            if (seconds < 1){
+
+            if (seconds < 1) {
                 seconds = 0;
             }
-            if (("" + seconds).length() < 2){
-                segundos_restantes_str = "0" +  seconds;
+            if (("" + seconds).length() < 2) {
+                segundos_restantes_str = "0" + seconds;
+            } else {
+                segundos_restantes_str = "" + seconds;
             }
-            else{
-                segundos_restantes_str = "" +  seconds;
-            }
-            
+
             String remaining;
             remaining = horas_restantes_str + ":" + minutos_restantes_str + ":" + segundos_restantes_str;
-            if (days > 0){
+            if (days > 0) {
                 String dia;
-                if (days == 1){
+                if (days == 1) {
                     dia = " día, ";
-                }
-                else{
+                } else {
                     dia = " días, ";
                 }
                 remaining = days + dia + remaining;
             }
-                    
-            lblnext_event.setText("<html>El próximo evento es <b>" + Evento.get("name") +"</b></html>");
+
+            lblnext_event.setText("<html>El próximo evento es <b>" + Evento.get("name") + "</b></html>");
             lblnext_event_remaining.setText("<html>" + remaining + "</html>");
-            gl.setSeconds_sum(gl.getSeconds_sum()+1);
-            
+            gl.setSeconds_sum(gl.getSeconds_sum() + 1);
+
             lblnext_event1.setVisible(true);
             lblnext_event_remaining.setVisible(true);
-        }
-        else{
+        } else {
             lblnext_event1.setVisible(false);
             lblnext_event_remaining.setVisible(false);
             lblnext_event.setText("No hay evento próximos.");
         }
     }
-    
-    void ReloadInformation(){
+
+    void ReloadInformation() {
         txtCollaborator.setText("");
         Refresh();
         Actualizar_contadores();
         txtCollaborator.requestFocus();
     }
-    
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         String nombre_usuario;
         nombre_usuario = ((String) gl.user.get(2)).toString();
-        this.lblUsuario.setText("OpenERP - http://" + nombre_usuario + "@" + gl.getHost() +"/" + gl.getDb());
+        this.lblUsuario.setText("OpenERP - http://" + nombre_usuario + "@" + gl.getHost() + "/" + gl.getDb());
         //Instanciar un el Timer
         timer_obj = new Timer(1000, new iTimer());
         timer_obj.start();
-        
+
         ///Manejador de Hora
         calcular_hora hora_obj = new calcular_hora();
         hora_obj.start();
-        
+
         centrarVentana();
         ReloadInformation();
     }//GEN-LAST:event_formWindowOpened
-    
-    private boolean validar_cajas(){
+
+    private boolean validar_cajas() {
         boolean resp;
-        if ("".equals(this.txtusername.getText())){
-            JOptionPane.showMessageDialog(null, "Primero Ingresa tu nombre usuario","Aviso", JOptionPane.WARNING_MESSAGE);
+        if ("".equals(this.txtusername.getText())) {
+            JOptionPane.showMessageDialog(null, "Primero Ingresa tu nombre usuario", "Aviso", JOptionPane.WARNING_MESSAGE);
             this.txtusername.requestFocus();
             resp = false;
-        }
-        else{
-            if ("".equals(this.txtpassword.getText())){
-                JOptionPane.showMessageDialog(null, "Ingresa tu password","Aviso", JOptionPane.WARNING_MESSAGE);
+        } else {
+            if ("".equals(this.txtpassword.getText())) {
+                JOptionPane.showMessageDialog(null, "Ingresa tu password", "Aviso", JOptionPane.WARNING_MESSAGE);
                 this.txtpassword.requestFocus();
                 resp = false;
-            }
-            else{
-               resp = true;
+            } else {
+                resp = true;
             }
         }
         return resp;
     }
 
-    void llamar_frmok(String reg_username){
+    void llamar_frmok(String reg_username) {
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
         int uid = Integer.parseInt("" + gl.user.get(0));
-        String password = "" + gl.user.get(3); 
+        String password = "" + gl.user.get(3);
         String ip = gl.getHost();
-        int port = gl.getPort(); 
-        String db = gl.getDb(); 
+        int port = gl.getPort();
+        String db = gl.getDb();
         try {
             int collaborator_id = clsConnection_to_OERP.get_collaborator_id(uid, password, ip, port, db, reg_username);
-            gl.Login_Collaborator = clsConnection_to_OERP.read_collaborator(uid, password, ip, port, db,collaborator_id);
+            gl.Login_Collaborator = clsConnection_to_OERP.read_collaborator(uid, password, ip, port, db, collaborator_id);
         } catch (Exception ex) {
             Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
         }
-        frmOK frm = new frmOK(this,true);
+        frmOK frm = new frmOK(this, true);
         frm.setVisible(rootPaneCheckingEnabled);
     }
-    
-    void Aceptar(){
-        if (this.validar_cajas()){
+
+    void Aceptar() {
+        if (this.validar_cajas()) {
             clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
             int uid = Integer.parseInt("" + gl.user.get(0));
-            String password = "" + gl.user.get(3); 
+            String password = "" + gl.user.get(3);
             String ip = gl.getHost();
-            int port = gl.getPort(); 
-            String db = gl.getDb(); 
-            String reg_username = txtusername.getText(); 
+            int port = gl.getPort();
+            String db = gl.getDb();
+            String reg_username = txtusername.getText();
             String reg_password = txtpassword.getText();
-                    
+
             clsConnection_to_OERP.RespRegistrarAsisitencia resp = null;
             try {
                 resp = clsConnection_to_OERP.register_attendace(uid, password, ip, port, db, reg_username, reg_password);
             } catch (Exception ex) {
                 Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            switch (resp)
-            {
+
+            switch (resp) {
                 case Error_login:
-                    JOptionPane.showMessageDialog(null, "Nombre de Usuario o Password Incorrecto.","Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Nombre de Usuario o Password Incorrecto.", "Error", JOptionPane.ERROR_MESSAGE);
                     this.txtpassword.setText("");
                     this.txtpassword.requestFocus();
                     break;
                 case No_Collaborator:
-                    JOptionPane.showMessageDialog(null, "Las credenciales ingresadas no pertencen a un Colaborador.","Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Las credenciales ingresadas no pertencen a un Colaborador.", "Error", JOptionPane.ERROR_MESSAGE);
                     this.txtusername.setText("");
                     this.txtpassword.setText("");
                     this.txtusername.requestFocus();
                     break;
                 case No_staff:
-                    JOptionPane.showMessageDialog(null, "No estas en la lista de colaboradores asignados para este evento.","Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No estas en la lista de colaboradores asignados para este evento.", "Error", JOptionPane.ERROR_MESSAGE);
                     this.txtusername.setText("");
                     this.txtpassword.setText("");
                     this.txtusername.requestFocus();
                     break;
                 case No_events:
-                    JOptionPane.showMessageDialog(null, "No hay eventos disponibles para registrar tu asistencia.","Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No hay eventos disponibles para registrar tu asistencia.", "Error", JOptionPane.ERROR_MESSAGE);
                     ReloadInformation();
                     break;
                 case Already_register:
-                    JOptionPane.showMessageDialog(null, "Ya has registrado tu asistencia para este evento.","Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Ya has registrado tu asistencia para este evento.", "Error", JOptionPane.ERROR_MESSAGE);
                     this.txtusername.setText("");
                     this.txtpassword.setText("");
                     this.txtusername.requestFocus();
                     break;
-                case Ok:   
+                case Already_checkout:
+                    JOptionPane.showMessageDialog(null, "Ya has registrado tu salida en este evento.", "Error", JOptionPane.ERROR_MESSAGE);
+                    this.txtusername.setText("");
+                    this.txtpassword.setText("");
+                    this.txtusername.requestFocus();
+                    break;
+                case Ok:
                     colaboradores_registrados colaboradores_registrados_obj = new colaboradores_registrados();
                     colaboradores_registrados_obj.start();
                     llamar_frmok(reg_username);
@@ -1165,18 +1158,18 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         ReloadInformation();
     }//GEN-LAST:event_btnReloadActionPerformed
 
-    private void close(){
+    private void close() {
         int resp;
-        resp = JOptionPane.showConfirmDialog(rootPane, "¿Desea realmente salir del sistema?","Salir del sistema", JOptionPane.YES_NO_OPTION);
+        resp = JOptionPane.showConfirmDialog(rootPane, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
-    } 
+    }
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
     }//GEN-LAST:event_formWindowClosing
@@ -1190,17 +1183,16 @@ public class frmRegister_attendance extends javax.swing.JFrame {
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void txtpasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpasswordKeyPressed
-        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13){
+        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13) {
             Aceptar();
         }
     }//GEN-LAST:event_txtpasswordKeyPressed
 
     private void txtusernameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtusernameKeyPressed
-        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13){
-            if ("".equals(txtpassword.getText())){
+        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13) {
+            if ("".equals(txtpassword.getText())) {
                 txtpassword.requestFocus();
-            }
-            else{
+            } else {
                 Aceptar();
             }
         }
@@ -1213,35 +1205,34 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     private void tblCollaboratorsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCollaboratorsMouseClicked
         if (evt.getClickCount() == 2) {
-         JTable target = (JTable)evt.getSource();
-         int column = target.getSelectedColumn();
-         if (column == 1 || column == 2){
-            int row = target.getSelectedRow();
-            final String Username = (tblCollaborators.getModel().getValueAt(row, 5)).toString();
-            txtusername.setText(Username);
-            txtpassword.requestFocus();
-         }
+            JTable target = (JTable) evt.getSource();
+            int column = target.getSelectedColumn();
+            if (column == 1 || column == 2) {
+                int row = target.getSelectedRow();
+                final String Username = (tblCollaborators.getModel().getValueAt(row, 5)).toString();
+                txtusername.setText(Username);
+                txtpassword.requestFocus();
+            }
         }
     }//GEN-LAST:event_tblCollaboratorsMouseClicked
 
     private void btnCloseSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseSessionActionPerformed
-        Object [] opciones ={"Aceptar","Cancelar"};
+        Object[] opciones = {"Aceptar", "Cancelar"};
         int eleccion = JOptionPane.showOptionDialog(null,
-        "¿Estás seguro de Cerrar la Sesión ahora?",
-        "Confirmar",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.QUESTION_MESSAGE,
-        null,
-        opciones,
-        "Aceptar");
-        if (eleccion == JOptionPane.YES_OPTION)
-        {
+                "¿Estás seguro de Cerrar la Sesión ahora?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                "Aceptar");
+        if (eleccion == JOptionPane.YES_OPTION) {
             this.dispose();
             frmLogin flogin = new frmLogin();
             flogin.setVisible(rootPaneCheckingEnabled);
         }
     }//GEN-LAST:event_btnCloseSessionActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
