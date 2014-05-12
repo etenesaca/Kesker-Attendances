@@ -301,11 +301,10 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 nombre_guardado = nombre_guardado.toLowerCase();
                 int res = nombre_guardado.indexOf(nombre_buscado.toLowerCase());
                 if (nombre_guardado.indexOf(nombre_buscado.toLowerCase()) != -1) {
-                    Object[] fila = new Object[4];
-                    fila[0] = Coll.get(0);
-                    fila[1] = Coll.get(1);
-                    fila[2] = Coll.get(2);
-                    fila[3] = Coll.get(3);
+                    Object[] fila = new Object[Coll.size()];
+                    for (int j = 0; j < Coll.size(); j++) {
+                        fila[j] = Coll.get(j);
+                    }
                     modelo.addRow(fila);
                 }
             }
@@ -321,13 +320,20 @@ public class frmRegister_attendance extends javax.swing.JFrame {
     private class getCollaboratorPhoto extends Thread {
 
         int collaborator_id;
-        DefaultTableModel modelo;
+        DefaultTableModel modelo = null;
+        Vector Coll = null;
         int row;
+        int column = 1;
 
         public getCollaboratorPhoto(int collaborator_id, DefaultTableModel modelo, int row) {
             this.collaborator_id = collaborator_id;
             this.modelo = modelo;
             this.row = row;
+        }
+
+        public getCollaboratorPhoto(int collaborator_id, Vector Coll) {
+            this.collaborator_id = collaborator_id;
+            this.Coll = Coll;
         }
 
         public void getPhoto() {
@@ -338,7 +344,11 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 String photo_str = Collaborator.get(photo_field).toString();
                 byte[] foto = new BASE64Decoder().decodeBuffer(new String(photo_str.getBytes()));
                 ImageIcon Photo = hupernikao.ReziseImage(foto, gl.size_thumbnails);
-                this.modelo.setValueAt(new JLabel(Photo), row, 1);
+                if (this.modelo != null) {
+                    this.modelo.setValueAt(new JLabel(Photo), this.row, this.column);
+                } else {
+                    this.Coll.set(this.column, new JLabel(Photo));
+                }
             } catch (Exception ex) {
                 Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -418,8 +428,13 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
             //Obtener las fotos de los colaboradores
             for (int i = 0; tblCollaborators.getRowCount() > i; i++) {
-                int collaboraotor_id = Integer.parseInt("" + modelo.getValueAt(i, 0));
-                new getCollaboratorPhoto(collaboraotor_id, modelo, i).start();
+                int collaborator_id = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+                new getCollaboratorPhoto(collaborator_id, modelo, i).start();
+            }
+            for (int i = 0; gl.getFilas() > i; i++) {
+                Vector Coll = (Vector) gl.getCollaborator_vector().get(i);
+                int collaborator_id = Integer.parseInt(Coll.get(0).toString());
+                new getCollaboratorPhoto(collaborator_id, Coll).start();
             }
         }
 
