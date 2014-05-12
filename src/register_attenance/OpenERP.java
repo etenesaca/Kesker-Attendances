@@ -136,6 +136,26 @@ public class OpenERP extends OpenERPConnection {
         return Collaborators;
     }
 
+    public Collaborator getCollaborator(int collaborator_id) {
+        String[] fields = {"id", "name", "name_with_nick_name", "code", "points", "user_id"};
+        HashMap<String, Object> Collaborator_dict = read("kemas.collaborator", collaborator_id, fields);
+        Collaborator resp_collaborator = new Collaborator();
+        resp_collaborator.setId(Collaborator_dict.get("id").toString());
+        resp_collaborator.setCode(Collaborator_dict.get("code").toString());
+        resp_collaborator.setName(Collaborator_dict.get("name").toString());
+        resp_collaborator.setShortName(Collaborator_dict.get("name_with_nick_name").toString());
+        resp_collaborator.setPoint(Integer.parseInt(Collaborator_dict.get("points").toString()));
+        return resp_collaborator;
+    }
+
+    public Collaborator getCollaborator(String username) {
+        String model = "kemas.collaborator";
+        ArrayList<Object> args = new ArrayList<Object>();
+        args.add(new Object[]{"user_id.login", "=", username});
+        Long[] collaborator_ids = search(model, args);
+        return getCollaborator(Integer.parseInt(collaborator_ids[0].toString()));
+    }
+
     /**
      * Constructor con el uid en Integer *
      */

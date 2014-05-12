@@ -1154,20 +1154,12 @@ public class frmRegister_attendance extends javax.swing.JFrame {
     }
 
     void llamar_frmok(String reg_username) {
-        clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
-        int uid = Integer.parseInt("" + gl.user.get(0));
-        String password = "" + gl.user.get(3);
-        String ip = gl.getHost();
-        int port = gl.getPort();
-        String db = gl.getDb();
-        try {
-            int collaborator_id = clsConnection_to_OERP.get_collaborator_id(uid, password, ip, port, db, reg_username);
-            gl.Login_Collaborator = clsConnection_to_OERP.read_collaborator(uid, password, ip, port, db, collaborator_id);
-        } catch (Exception ex) {
-            Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+        gl.Login_Collaborator = oerp.getCollaborator(reg_username);
+        if (gl.Login_Collaborator != null) {
+            frmOK frm = new frmOK(this, true);
+            frm.setVisible(rootPaneCheckingEnabled);
         }
-        frmOK frm = new frmOK(this, true);
-        frm.setVisible(rootPaneCheckingEnabled);
     }
 
     void Aceptar() {

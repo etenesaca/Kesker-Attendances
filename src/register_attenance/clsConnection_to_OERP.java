@@ -231,64 +231,6 @@ public class clsConnection_to_OERP {
         return null;
     }
 
-    public static Collaborator read_collaborator(int uid, String password, String ip, int port, String db, int collaborator_id) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Object[] params2 = {"id", "name", "code", "points", "photo"};
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.collaborator");
-        arg.add("read");
-        arg.add(collaborator_id);
-        arg.add(params2);
-
-        HashMap ids = (HashMap) client.execute("execute", arg);
-
-        String photo = ids.get("photo") + "";
-        byte[] dec = clsConnection_to_OERP.decode(photo.getBytes());
-        //ImageIcon ii = new ImageIcon(dec);
-        Collaborator resp_collaborator = new Collaborator();
-        resp_collaborator.setPhoto(dec);
-        resp_collaborator.setId("" + ids.get("id"));
-        resp_collaborator.setName("" + ids.get("name"));
-        resp_collaborator.setCode("" + ids.get("code"));
-        resp_collaborator.setPoint(Integer.parseInt("" + ids.get("points")));
-
-        String nick_name;
-        resp_collaborator.setName("" + ids.get("name"));
-        nick_name = clsConnection_to_OERP.name_get(uid, password, ip, port, db, collaborator_id);
-        resp_collaborator.setNickname(nick_name);
-        return resp_collaborator;
-    }
-
-    public static String name_get(int uid, String password, String ip, int port, String db, int collaborator_id) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.collaborator");
-        arg.add("get_nick_name");
-        arg.add(collaborator_id);
-
-        Object resp = client.execute("execute", arg);
-        return "" + resp;
-    }
-
     public boolean is_register_attedance_login(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
@@ -325,26 +267,6 @@ public class clsConnection_to_OERP {
 
         Object resp = client.execute("execute", arg);
         return Boolean.parseBoolean(resp + "");
-    }
-
-    public static int get_collaborator_id(int uid, String password, String ip, int port, String db, String username) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.collaborator");
-        arg.add("get_by_user_id");
-        arg.add(username);
-
-        Object resp = client.execute("execute", arg);
-        return Integer.parseInt("" + resp);
     }
 
     public static HashMap get_next_event(int uid, String password, String ip, int port, String db) throws Exception {

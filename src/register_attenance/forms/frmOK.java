@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -23,10 +24,12 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import register_attenance.Collaborator;
 import register_attenance.OpenERP;
 import register_attenance.gl;
 import register_attenance.hupernikao;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -100,7 +103,6 @@ public class frmOK extends javax.swing.JDialog {
         lblNombre.setText("Colaborador");
 
         lblPhoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/collaborator.png"))); // NOI18N
-        lblPhoto.setText("sdsds");
 
         lblPuntos.setText("Puntos");
 
@@ -249,6 +251,33 @@ public class frmOK extends javax.swing.JDialog {
         return img;
     }
 
+    private class getCollaboratorPhoto extends Thread {
+
+        int collaborator_id;
+
+        public getCollaboratorPhoto(int collaborator_id) {
+            this.collaborator_id = collaborator_id;
+        }
+
+        public void getPhoto() {
+            OpenERP oerp = hupernikao.BuildOpenERPConnection();
+            try {
+                String photo_field = "photo_large";
+                HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
+                String photo_str = Collaborator.get(photo_field).toString();
+                byte[] foto = new BASE64Decoder().decodeBuffer(new String(photo_str.getBytes()));
+                ImageIcon Photo = hupernikao.ReziseImage(foto, 96);
+                lblPhoto.setIcon(Photo);
+            } catch (Exception ex) {
+                Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        @Override
+        public void run() {
+            getPhoto();
+        }
+    }
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         centrarVentana();
         String hora_str;
@@ -272,11 +301,15 @@ public class frmOK extends javax.swing.JDialog {
 
         hora_str = hora + ":" + minutos + ":" + segundos;
         //lblCodigo.setText(gl.Login_Collaborator.getCode());
-        lblNombre.setText(gl.Login_Collaborator.getNickname());
+        lblNombre.setText(gl.Login_Collaborator.getShortName());
         lblPuntos.setText("" + gl.Login_Collaborator.getPoint());
         lblHora_de_registro.setText(hora_str);
-        ImageIcon newIcon = hupernikao.ReziseImage(gl.Login_Collaborator.getPhoto(), 96);
-        lblPhoto.setIcon(newIcon);
+
+        //Mostrar la foto del colaborador
+        ImageIcon person = new ImageIcon(getClass().getResource("/Imagenes/person_dark.png"));
+        ImageIcon CollaboratorAvatar = hupernikao.ReziseImage(person.getImage(), 96);
+        lblPhoto.setIcon(CollaboratorAvatar);
+        new getCollaboratorPhoto(Integer.parseInt(gl.Login_Collaborator.getId())).start();
 
         //Listar las actividades asignadas
         OpenERP oerp = hupernikao.BuildOpenERPConnection();

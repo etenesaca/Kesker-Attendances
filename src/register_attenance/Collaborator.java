@@ -13,16 +13,17 @@ import javax.swing.ImageIcon;
  * @author edgar
  */
 public class Collaborator {
-    private String Id, Name, Username, Nickname, Code;
+
+    private String Id, Name, Username, ShortName, Code;
     private int Point;
     private byte[] Photo;
-    private HashMap<Object,Object> registrado;
+    private HashMap<Object, Object> registrado;
     private boolean checkout;
 
-    public HashMap<Object,Object> isRegistrado() {
+    public HashMap<Object, Object> isRegistrado() {
         return registrado;
     }
-    
+
     public boolean isCheckout() {
         return checkout;
     }
@@ -35,7 +36,7 @@ public class Collaborator {
         this.Username = Username;
     }
 
-    public void setRegistrado(HashMap<Object,Object> registrado) {
+    public void setRegistrado(HashMap<Object, Object> registrado) {
         this.registrado = registrado;
     }
 
@@ -63,12 +64,12 @@ public class Collaborator {
         this.Name = Name;
     }
 
-    public String getNickname() {
-        return Nickname;
+    public String getShortName() {
+        return ShortName;
     }
 
-    public void setNickname(String Nickname) {
-        this.Nickname = Nickname;
+    public void setShortName(String ShortName) {
+        this.ShortName = ShortName;
     }
 
     public String getCode() {
