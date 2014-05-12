@@ -31,6 +31,7 @@ import register_attenance.OpenERP;
 import register_attenance.gl;
 import register_attenance.clsConnection_to_OERP;
 import register_attenance.hupernikao;
+import register_attenance.OpenERP.RespRegistrarAsisitencia;
 
 /**
  *
@@ -1123,13 +1124,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             String reg_username = txtusername.getText();
             String reg_password = txtpassword.getText();
 
-            clsConnection_to_OERP.RespRegistrarAsisitencia resp = null;
-            try {
-                resp = clsConnection_to_OERP.register_attendace(uid, password, ip, port, db, reg_username, reg_password);
-            } catch (Exception ex) {
-                Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+            colaboradores_registrados colaboradores_registrados_obj = new colaboradores_registrados();
+            OpenERP oerp = hupernikao.BuildOpenERPConnection();
+            RespRegistrarAsisitencia resp = oerp.RegisterAttendance(reg_username, reg_password);
             switch (resp) {
                 case Error_login:
                     JOptionPane.showMessageDialog(null, "Nombre de Usuario o Password Incorrecto.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1164,10 +1161,15 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                     this.txtpassword.setText("");
                     this.txtusername.requestFocus();
                     break;
-                case Ok:
-                    colaboradores_registrados colaboradores_registrados_obj = new colaboradores_registrados();
+                case checkin:
                     colaboradores_registrados_obj.start();
                     llamar_frmok(reg_username);
+                    this.txtusername.setText("");
+                    this.txtpassword.setText("");
+                    this.txtusername.requestFocus();
+                    break;
+                case checkout:
+                    colaboradores_registrados_obj.start();
                     this.txtusername.setText("");
                     this.txtpassword.setText("");
                     this.txtusername.requestFocus();

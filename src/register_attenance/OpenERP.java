@@ -6,11 +6,70 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 public class OpenERP extends OpenERPConnection {
+
+    public enum RespRegistrarAsisitencia {
+
+        Error_login,
+        No_Collaborator,
+        No_staff,
+        No_events,
+        Already_register,
+        Already_checkout,
+        checkin,
+        checkout
+    }
+
+    public RespRegistrarAsisitencia RegisterAttendance(String reg_username, String reg_password) {
+        XmlRpcClient client = build_xmlrcp_client(mUrl);
+
+        Vector<Object> params = new Vector<Object>();
+        HashMap<Object, Object> context = new HashMap<Object, Object>();
+        context.put("with_register_type", true);
+        params.add(getDatabase());
+        params.add(getUserId());
+        params.add(getPassword());
+        params.add("kemas.attendance");
+        params.add("register_attendance");
+        params.add(reg_username);
+        params.add(reg_password);
+        params.add(context);
+
+        RespRegistrarAsisitencia result = null;
+        try {
+            Object resp = client.execute("execute", params);
+            String _resp = "" + resp;
+            if ("r_1".equals(_resp)) {
+                result = RespRegistrarAsisitencia.Error_login;
+            } else if ("r_2".equals(_resp)) {
+                result = RespRegistrarAsisitencia.No_Collaborator;
+            } else if ("r_3".equals(_resp)) {
+                result = RespRegistrarAsisitencia.No_staff;
+            } else if ("r_4".equals(_resp)) {
+                result = RespRegistrarAsisitencia.No_events;
+            } else if ("r_5".equals(_resp)) {
+                result = RespRegistrarAsisitencia.Already_register;
+            } else if ("r_6".equals(_resp)) {
+                result = RespRegistrarAsisitencia.Already_checkout;
+            } else {
+                HashMap<Object, Object> resp_dict = (HashMap<Object, Object>) resp;
+                if (resp_dict.get("register_type").equals("checkin")) {
+                    result = RespRegistrarAsisitencia.checkin;
+                } else {
+                    result = RespRegistrarAsisitencia.checkout;
+                }
+            }
+        } catch (XmlRpcException ex) {
+            Logger.getLogger(OpenERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
 
     /**
      * Este Metodo devuelve todos los colaboradores que han registrado
