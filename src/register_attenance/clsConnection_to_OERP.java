@@ -370,55 +370,6 @@ public class clsConnection_to_OERP {
         }
     }
 
-    public static Vector<Collaborator> get_collaborators_for_this_event(int uid, String password, String ip, int port, String db, int event_id) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.event");
-        arg.add("get_collaborators_by_event");
-        arg.add(event_id);
-        arg.add(gl.size_thumbnails);
-
-        Object[] colls = (Object[]) client.execute("execute", arg);
-
-        Vector<Collaborator> Collaborators = new Vector<Collaborator>();
-        for (Object collaborator_dic : colls) {
-            HashMap current_collaborator = (HashMap) collaborator_dic;
-            String id, nombre, username;
-            boolean registrado;
-            byte[] foto;
-
-            id = "" + current_collaborator.get("id");
-            nombre = "" + current_collaborator.get("name");
-            username = "" + current_collaborator.get("username");
-            registrado = Boolean.parseBoolean("" + current_collaborator.get("registered"));
-            try {
-                String photo = current_collaborator.get("photo") + "";
-                foto = clsConnection_to_OERP.decode(photo.getBytes());
-            } catch (Exception e) {
-                foto = null;
-            }
-
-            Collaborator Collaborator_ent = new Collaborator();
-            Collaborator_ent.setId(id);
-            Collaborator_ent.setName(nombre);
-            Collaborator_ent.setUsername(username);
-            Collaborator_ent.setPhoto(foto);
-            Collaborator_ent.setRegistrado(registrado);
-
-            Collaborators.add(Collaborator_ent);
-        }
-        return Collaborators;
-    }
-
     public static Vector<Event> get_today_events(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();

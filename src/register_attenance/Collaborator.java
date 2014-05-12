@@ -5,6 +5,7 @@
 package register_attenance;
 
 import java.awt.Image;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
 
 /**
@@ -15,10 +16,10 @@ public class Collaborator {
     private String Id, Name, Username, Nickname, Code;
     private int Point;
     private byte[] Photo;
-    private boolean registrado;
+    private HashMap<Object,Object> registrado;
     private boolean checkout;
 
-    public boolean isRegistrado() {
+    public HashMap<Object,Object> isRegistrado() {
         return registrado;
     }
     
@@ -34,7 +35,7 @@ public class Collaborator {
         this.Username = Username;
     }
 
-    public void setRegistrado(boolean registrado) {
+    public void setRegistrado(HashMap<Object,Object> registrado) {
         this.registrado = registrado;
     }
 
