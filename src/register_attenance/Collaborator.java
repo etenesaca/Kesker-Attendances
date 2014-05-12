@@ -86,29 +86,4 @@ public class Collaborator {
     public void setPoint(int Point) {
         this.Point = Point;
     }
-    
-    public static ImageIcon resize_image(byte[] Photo, int min_size){
-        ImageIcon ii = new ImageIcon(Photo);
-        Image img = ii.getImage();
-        int img_width = img.getWidth(null);
-        int img_height = img.getHeight(null);
-        if (img_width != img_height){
-            if (img_width < img_height){
-                img_width = img_width * min_size / img_height;
-                img_height = min_size;
-            }
-            else{
-                img_height = img_height * min_size / img_height;
-                img_width = min_size;
-            }
-        }
-        else{
-            img_width = min_size;
-            img_height = min_size;
-        }
-        //------------------------------------
-        Image newimg = img.getScaledInstance(img_width, img_height,  java.awt.Image.SCALE_SMOOTH);  
-        ImageIcon newIcon = new ImageIcon(newimg);
-        return newIcon;
-    }
 }

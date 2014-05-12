@@ -275,7 +275,7 @@ public class frmOK extends javax.swing.JDialog {
         lblNombre.setText(gl.Login_Collaborator.getNickname());
         lblPuntos.setText("" + gl.Login_Collaborator.getPoint());
         lblHora_de_registro.setText(hora_str);
-        ImageIcon newIcon = Collaborator.resize_image(gl.Login_Collaborator.getPhoto(), 96);
+        ImageIcon newIcon = hupernikao.ReziseImage(gl.Login_Collaborator.getPhoto(), 96);
         lblPhoto.setIcon(newIcon);
 
         //Listar las actividades asignadas

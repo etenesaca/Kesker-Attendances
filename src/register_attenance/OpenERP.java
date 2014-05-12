@@ -116,7 +116,6 @@ public class OpenERP extends OpenERPConnection {
                 HashMap current_collaborator = (HashMap) collaborator_dic;
                 String id, nombre, username;
                 HashMap<Object, Object> registrado = null;
-                byte[] foto;
 
                 id = "" + current_collaborator.get("id");
                 nombre = "" + current_collaborator.get("name");
@@ -124,18 +123,11 @@ public class OpenERP extends OpenERPConnection {
                 if (!current_collaborator.get("registered").toString().equals("false")) {
                     registrado = (HashMap<Object, Object>) current_collaborator.get("registered");
                 }
-                try {
-                    String photo = current_collaborator.get("photo") + "";
-                    foto = clsConnection_to_OERP.decode(photo.getBytes());
-                } catch (Exception e) {
-                    foto = null;
-                }
 
                 Collaborator Collaborator_ent = new Collaborator();
                 Collaborator_ent.setId(id);
                 Collaborator_ent.setName(nombre);
                 Collaborator_ent.setUsername(username);
-                Collaborator_ent.setPhoto(foto);
                 Collaborator_ent.setRegistrado(registrado);
 
                 Collaborators.add(Collaborator_ent);

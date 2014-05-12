@@ -344,7 +344,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             for (Collaborator colaborador : Colaboradores) {
                 Object[] fila = new Object[7];
                 //ImageIcon icon = new ImageIcon(getClass().getResource("/Imagenes/col.png"));
-                ImageIcon CollaboratorAvatar = Collaborator.resize_image(colaborador.getPhoto(), gl.size_thumbnails);
+                ImageIcon person = new ImageIcon(getClass().getResource("/Imagenes/person_dark.png"));
+                ImageIcon CollaboratorAvatar = hupernikao.ReziseImage(person.getImage(), gl.size_thumbnails);
+                //ImageIcon CollaboratorAvatar = Collaborator.resize_image(colaborador.getPhoto(), gl.size_thumbnails);
                 fila[0] = colaborador.getId();
                 fila[1] = new JLabel(CollaboratorAvatar);
                 fila[2] = colaborador.getName();
