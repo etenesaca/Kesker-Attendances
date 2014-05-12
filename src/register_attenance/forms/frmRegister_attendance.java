@@ -11,6 +11,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import register_attenance.gl;
 import register_attenance.clsConnection_to_OERP;
 import register_attenance.hupernikao;
 import register_attenance.OpenERP.RespRegistrarAsisitencia;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -316,6 +318,38 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         }
     }
 
+    private class getCollaboratorPhoto extends Thread {
+
+        int collaborator_id;
+        DefaultTableModel modelo;
+        int row;
+
+        public getCollaboratorPhoto(int collaborator_id, DefaultTableModel modelo, int row) {
+            this.collaborator_id = collaborator_id;
+            this.modelo = modelo;
+            this.row = row;
+        }
+
+        public void getPhoto() {
+            OpenERP oerp = hupernikao.BuildOpenERPConnection();
+            try {
+                String photo_field = "photo_small";
+                HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
+                String photo_str = Collaborator.get(photo_field).toString();
+                byte[] foto = new BASE64Decoder().decodeBuffer(new String(photo_str.getBytes()));
+                ImageIcon Photo = hupernikao.ReziseImage(foto, gl.size_thumbnails);
+                this.modelo.setValueAt(new JLabel(Photo), row, 1);
+            } catch (Exception ex) {
+                Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        @Override
+        public void run() {
+            getPhoto();
+        }
+    }
+
     private class colaboradores_del_evento extends Thread {
 
         private int event_id;
@@ -381,6 +415,12 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             gl.setCollaborator_vector((Vector) copy.clone());
             gl.setFilas(tblCollaborators.getRowCount());
             calcular_colaboradores_regitrados();
+
+            //Obtener las fotos de los colaboradores
+            for (int i = 0; tblCollaborators.getRowCount() > i; i++) {
+                int collaboraotor_id = Integer.parseInt("" + modelo.getValueAt(i, 0));
+                new getCollaboratorPhoto(collaboraotor_id, modelo, i).start();
+            }
         }
 
         @Override

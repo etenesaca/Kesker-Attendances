@@ -107,7 +107,6 @@ public class OpenERP extends OpenERPConnection {
         params.add("kemas.event");
         params.add("get_collaborators_by_event");
         params.add(event_id);
-        params.add(gl.size_thumbnails);
 
         Vector<Collaborator> Collaborators = new Vector<Collaborator>();
         try {
