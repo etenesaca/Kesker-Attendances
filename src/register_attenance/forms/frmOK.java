@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -11,11 +11,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +24,8 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import register_attenance.Collaborator;
 import register_attenance.OpenERP;
@@ -144,7 +146,9 @@ public class frmOK extends javax.swing.JDialog {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
         );
 
         btnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/kanban-apply.png"))); // NOI18N
@@ -190,8 +194,8 @@ public class frmOK extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,7 +220,7 @@ public class frmOK extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnOK)
                 .addContainerGap())
         );
 
@@ -249,6 +253,16 @@ public class frmOK extends javax.swing.JDialog {
         }
         Image img = reader.read(0, param);
         return img;
+    }
+
+    class RoundedBorder extends AbstractBorder {
+
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(Color.red);
+            int arc = 10000;
+            g2.drawRoundRect(x, y, width - 1, height - 1, arc, arc);
+        }
     }
 
     private class getCollaboratorPhoto extends Thread {
@@ -324,15 +338,26 @@ public class frmOK extends javax.swing.JDialog {
         Long[] line_ids = oerp.search(model, args);
         List<HashMap<String, Object>> lines = oerp.read(model, line_ids, new String[]{"activity_ids"});
 
+        DefaultListModel mdlactivities = new DefaultListModel();
+        int num_activities = 0;
         for (HashMap<String, Object> line : lines) {
             Object[] activity_ids = (Object[]) line.get("activity_ids");
             List<HashMap<String, Object>> activities = oerp.read("kemas.activity", activity_ids, new String[]{"name"});
-            DefaultListModel mdlactivities = new DefaultListModel();
             for (HashMap<String, Object> activity : activities) {
                 mdlactivities.addElement(activity.get("name"));
+                num_activities++;
             }
-            lstActivities.setModel(mdlactivities);
         }
+        if (num_activities == 0) {
+            mdlactivities.addElement("");
+            mdlactivities.addElement("");
+            mdlactivities.addElement("<html><b><i>     --No hay actividades asignadas-- </i></b></html>");
+            lstActivities.setIconoSeleccionado(null);
+            lstActivities.setIconoNoSeleccionado(null);
+            lstActivities.setColorSeleccionado(Color.red);
+            lstActivities.setColorNoSeleccionado(Color.red);
+        }
+        lstActivities.setModel(mdlactivities);
 
         this.setTitle("Registro de asistencia agregado Correctamente.");
         btnOK.requestFocus();

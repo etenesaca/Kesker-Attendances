@@ -1,5 +1,6 @@
 package register_attenance;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,9 +9,11 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import sun.misc.BASE64Decoder;
 
 public class OpenERP extends OpenERPConnection {
 
@@ -154,6 +157,32 @@ public class OpenERP extends OpenERPConnection {
         args.add(new Object[]{"user_id.login", "=", username});
         Long[] collaborator_ids = search(model, args);
         return getCollaborator(Integer.parseInt(collaborator_ids[0].toString()));
+    }
+
+    public byte[] getBanner() {
+        XmlRpcClient client = build_xmlrcp_client(mUrl);
+
+        Vector<Object> params = new Vector<Object>();
+        String[] fields = new String[]{"logo_program_client"};
+        params.add(getDatabase());
+        params.add(getUserId());
+        params.add(getPassword());
+        params.add("kemas.config");
+        params.add("get_correct_config");
+        params.add(fields);
+
+        byte[] imagen = null;
+        try {
+            Object Config_obj = (Object) client.execute("execute", params);
+            HashMap<String, Object> Config = (HashMap<String, Object>) Config_obj;
+            String image_str = Config.get("logo_program_client").toString();
+            imagen = new BASE64Decoder().decodeBuffer(new String(image_str.getBytes()));
+        } catch (XmlRpcException e) {
+            Logger.getLogger(OpenERP.class.getName()).log(Level.SEVERE, null, e);
+        } catch (IOException ex) {
+            Logger.getLogger(OpenERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return imagen;
     }
 
     /**

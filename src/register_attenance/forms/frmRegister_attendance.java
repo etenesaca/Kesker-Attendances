@@ -85,6 +85,20 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         }
     }
 
+    private class BuildBanner extends Thread {
+
+        public void setBanner() {
+            OpenERP oerp = hupernikao.BuildOpenERPConnection();
+            ImageIcon Banner = new ImageIcon(oerp.getBanner());
+            lblBanner.setIcon(Banner);
+        }
+
+        @Override
+        public void run() {
+            setBanner();
+        }
+    }
+
     public void Refresh() {
         //Cargar Evento del día de hoy
         int uid = Integer.parseInt("" + gl.user.get(0));
@@ -165,6 +179,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             pnlNext_event.setVisible(true);
             pnlcollaborators.setVisible(false);
         }
+
+        //Obtener la imagen que se muestra en la parte superior derecha
+        new BuildBanner().start();
     }
 
     private void Actualizar_contadores() {
@@ -604,7 +621,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         pgRestante = new javax.swing.JProgressBar();
         lblRestante_puntual = new javax.swing.JLabel();
         pgRestante_puntual = new javax.swing.JProgressBar();
-        jLabel4 = new javax.swing.JLabel();
+        lblBanner = new javax.swing.JLabel();
         pnlHora = new javax.swing.JPanel();
         lblhora = new javax.swing.JLabel();
         lblmin = new javax.swing.JLabel();
@@ -719,7 +736,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Heading image.png"))); // NOI18N
+        lblBanner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Heading image.png"))); // NOI18N
 
         pnlHora.setBorder(null);
 
@@ -989,7 +1006,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, 0)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1016,7 +1033,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(10, 10, 10))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(24, 24, 24)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1346,13 +1363,13 @@ public class frmRegister_attendance extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lblBanner;
     private javax.swing.JLabel lblRestante;
     private javax.swing.JLabel lblRestante_puntual;
     private javax.swing.JLabel lblUsuario;
