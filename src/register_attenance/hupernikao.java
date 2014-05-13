@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import org.apache.ws.commons.util.Base64;
 
 public class hupernikao {
 
@@ -16,6 +17,7 @@ public class hupernikao {
      * Este método devuelve una conexión a OpenERP en el caso de que ya se
      * tengan todas las credenciales necesarias
      *
+     * @return Devuelve la instancia de una conexion al Servidor de OpenERP
      */
     public static OpenERP BuildOpenERPConnection() {
         OpenERP oerp = null;
@@ -33,32 +35,30 @@ public class hupernikao {
         }
         return oerp;
     }
-    
-    public static ImageIcon ReziseImage(byte[] Photo, int min_size){
+
+    public static ImageIcon ReziseImage(byte[] Photo, int min_size) {
         ImageIcon ii = new ImageIcon(Photo);
         Image img = ii.getImage();
         return ReziseImage(img, min_size);
     }
-    
-    public static ImageIcon ReziseImage(Image img, int min_size){
+
+    public static ImageIcon ReziseImage(Image img, int min_size) {
         int img_width = img.getWidth(null);
         int img_height = img.getHeight(null);
-        if (img_width != img_height){
-            if (img_width < img_height){
+        if (img_width != img_height) {
+            if (img_width < img_height) {
                 img_width = img_width * min_size / img_height;
                 img_height = min_size;
-            }
-            else{
+            } else {
                 img_height = img_height * min_size / img_height;
                 img_width = min_size;
             }
-        }
-        else{
+        } else {
             img_width = min_size;
             img_height = min_size;
         }
         //------------------------------------
-        Image newimg = img.getScaledInstance(img_width, img_height,  java.awt.Image.SCALE_SMOOTH);  
+        Image newimg = img.getScaledInstance(img_width, img_height, java.awt.Image.SCALE_SMOOTH);
         ImageIcon newIcon = new ImageIcon(newimg);
         return newIcon;
     }
@@ -80,5 +80,20 @@ public class hupernikao {
         //Graphics2D g2d = bi.createGraphics();
         //g2d.drawImage(image, 0, 0, null);
         return bi;
+    }
+
+    public static String DecodeB64ToString(String String64) {
+        return new String(DecodeB64ToBytes(String64));
+    }
+
+    public static byte[] DecodeB64ToBytes(String String64) {
+        byte[] result = null;
+        Base64 decoder = new Base64();
+        try {
+            result = decoder.decode(String64);
+        } catch (Base64.DecodingException ex) {
+            Logger.getLogger(hupernikao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 }

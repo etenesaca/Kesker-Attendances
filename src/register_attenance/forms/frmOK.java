@@ -7,16 +7,13 @@ package register_attenance.forms;
 import java.awt.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -25,9 +22,6 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-import register_attenance.Collaborator;
 import register_attenance.OpenERP;
 import register_attenance.gl;
 import register_attenance.hupernikao;
@@ -41,6 +35,8 @@ public class frmOK extends javax.swing.JDialog {
 
     /**
      * Creates new form frmOK
+     * @param parent
+     * @param modal
      */
     public frmOK(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -257,6 +253,7 @@ public class frmOK extends javax.swing.JDialog {
 
     class RoundedBorder extends AbstractBorder {
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setColor(Color.red);
@@ -275,16 +272,11 @@ public class frmOK extends javax.swing.JDialog {
 
         public void getPhoto() {
             OpenERP oerp = hupernikao.BuildOpenERPConnection();
-            try {
-                String photo_field = "photo_large";
-                HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
-                String photo_str = Collaborator.get(photo_field).toString();
-                byte[] foto = new BASE64Decoder().decodeBuffer(new String(photo_str.getBytes()));
-                ImageIcon Photo = hupernikao.ReziseImage(foto, 96);
-                lblPhoto.setIcon(Photo);
-            } catch (Exception ex) {
-                Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            String photo_field = "photo_large";
+            HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
+            String photo_str = Collaborator.get(photo_field).toString();
+            ImageIcon Photo = hupernikao.ReziseImage(hupernikao.DecodeB64ToBytes(photo_str), 96);
+            lblPhoto.setIcon(Photo);
         }
 
         @Override
@@ -398,6 +390,7 @@ public class frmOK extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 frmOK dialog = new frmOK(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {

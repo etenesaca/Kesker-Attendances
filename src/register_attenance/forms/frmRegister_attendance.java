@@ -11,7 +11,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +72,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
          * Este método es para que pinte el fondo del JLabel cuando lo
          * seleccionamos para que no quede en blanco, desentonando con el resto
          * de las celdas que no son JLabel
+         * @param t
+         * @param l
+         * @param isSelected
          */
         public void fillColor(JTable t, JLabel l, boolean isSelected) {
             if (isSelected) {
@@ -379,7 +381,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     private class colaboradores_del_evento extends Thread {
 
-        private int event_id;
+        private final int event_id;
 
         public colaboradores_del_evento(int current_event) {
             this.event_id = current_event;
@@ -393,7 +395,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             String db = "" + gl.getDb();
 
             OpenERP oerp = hupernikao.BuildOpenERPConnection();
-            Vector<Collaborator> Colaboradores = oerp.getEventCollaborators(this.event_id);
+            List<Collaborator> Colaboradores = oerp.getEventCollaborators(this.event_id);
 
             DefaultTableModel modelo = (DefaultTableModel) tblCollaborators.getModel();
             int filas = tblCollaborators.getRowCount();
