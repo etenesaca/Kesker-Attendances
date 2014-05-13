@@ -18,6 +18,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -638,6 +639,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         tblCollaborators = new javax.swing.JTable();
         txtCollaborator = new javax.swing.JTextField();
         lblcolaboradores_registrados = new javax.swing.JLabel();
+        btnClearSearch = new javax.swing.JButton();
         frmRegistrar_asistencia = new javax.swing.JInternalFrame();
         txtusername = new javax.swing.JTextField();
         txtpassword = new javax.swing.JPasswordField();
@@ -722,7 +724,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblRestante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pgRestante, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+            .addComponent(pgRestante, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
             .addComponent(lblRestante_puntual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pgRestante_puntual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -794,7 +796,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             .addGroup(pnlNext_eventLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlNext_eventLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblnext_event, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblnext_event, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                     .addComponent(lblnext_event1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblnext_event_remaining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -872,22 +874,36 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         lblcolaboradores_registrados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblcolaboradores_registrados.setText("  ");
 
+        btnClearSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Search.png"))); // NOI18N
+        btnClearSearch.setToolTipText("Limpiar caja de búsqueda");
+        btnClearSearch.setBorderPainted(false);
+        btnClearSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearSearchActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlcollaboratorsLayout = new javax.swing.GroupLayout(pnlcollaborators);
         pnlcollaborators.setLayout(pnlcollaboratorsLayout);
         pnlcollaboratorsLayout.setHorizontalGroup(
             pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlcollaboratorsLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(7, 7, 7)
                 .addGroup(pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblcolaboradores_registrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(txtCollaborator))
-                .addContainerGap())
+                    .addGroup(pnlcollaboratorsLayout.createSequentialGroup()
+                        .addComponent(txtCollaborator)
+                        .addGap(2, 2, 2)
+                        .addComponent(btnClearSearch)))
+                .addGap(7, 7, 7))
         );
         pnlcollaboratorsLayout.setVerticalGroup(
             pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlcollaboratorsLayout.createSequentialGroup()
-                .addComponent(txtCollaborator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCollaborator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClearSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -910,10 +926,10 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
-        jLabel2.setText("Username:");
+        jLabel2.setText("Nombre de Usuario:");
 
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
-        jLabel3.setText("Password:");
+        jLabel3.setText("Contraseña:");
 
         btnOk.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
         btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/STOCK_OK.png"))); // NOI18N
@@ -929,6 +945,10 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         frmRegistrar_asistenciaLayout.setHorizontalGroup(
             frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, frmRegistrar_asistenciaLayout.createSequentialGroup()
+                .addContainerGap(52, Short.MAX_VALUE)
+                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
             .addGroup(frmRegistrar_asistenciaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -940,15 +960,11 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, frmRegistrar_asistenciaLayout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
-                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
         );
         frmRegistrar_asistenciaLayout.setVerticalGroup(
             frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(frmRegistrar_asistenciaLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(46, 46, 46)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtusername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -991,7 +1007,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1045,9 +1061,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                         .addComponent(pnlcollaborators, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(12, 12, 12))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(frmRegistrar_asistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 16, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -1286,9 +1302,18 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtusernameKeyPressed
 
+    void RefreshButtonSearchIcon() {
+        if (!txtCollaborator.getText().equals("")) {
+            Icon ClearIcon = (Icon) new ImageIcon(getClass().getResource("/Imagenes/gtk-clear.png"));
+            btnClearSearch.setIcon(ClearIcon);
+        } else {
+            Icon RefreshIcon = (Icon) new ImageIcon(getClass().getResource("/Imagenes/Search.png"));
+            btnClearSearch.setIcon(RefreshIcon);
+        }
+    }
     private void txtCollaboratorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCollaboratorKeyReleased
-        busqueda_de_colaboradores search_obj = new busqueda_de_colaboradores();
-        search_obj.start();
+        new busqueda_de_colaboradores().start();
+        RefreshButtonSearchIcon();
     }//GEN-LAST:event_txtCollaboratorKeyReleased
 
     private void tblCollaboratorsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCollaboratorsMouseClicked
@@ -1320,6 +1345,15 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             flogin.setVisible(rootPaneCheckingEnabled);
         }
     }//GEN-LAST:event_btnCloseSessionActionPerformed
+
+    private void btnClearSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearSearchActionPerformed
+        if (!txtCollaborator.getText().equals("")) {
+            txtCollaborator.setText(null);
+            new busqueda_de_colaboradores().start();
+        }
+        txtCollaborator.requestFocus();
+        RefreshButtonSearchIcon();
+    }//GEN-LAST:event_btnClearSearchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1359,6 +1393,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         gl.setLoad_registereds(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnClearSearch;
     private javax.swing.JButton btnCloseSession;
     private javax.swing.JButton btnOk;
     private javax.swing.JButton btnReload;
