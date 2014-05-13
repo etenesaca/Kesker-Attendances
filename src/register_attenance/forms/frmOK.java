@@ -98,7 +98,8 @@ public class frmOK extends javax.swing.JDialog {
 
         lblNombre.setText("Colaborador");
 
-        lblPhoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/collaborator.png"))); // NOI18N
+        lblPhoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/person_dark.png"))); // NOI18N
+        lblPhoto.setPreferredSize(new java.awt.Dimension(64, 64));
 
         lblPuntos.setText("Puntos");
 
@@ -165,7 +166,7 @@ public class frmOK extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
@@ -197,7 +198,7 @@ public class frmOK extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -275,7 +276,7 @@ public class frmOK extends javax.swing.JDialog {
             String photo_str = Collaborator.get(photo_field).toString();
             byte[] foto = hupernikao.DecodeB64ToBytes(photo_str);
             if (foto != null) {
-                ImageIcon Photo = hupernikao.ReziseImage(foto, 96);
+                ImageIcon Photo = hupernikao.ReziseImage(foto, 64);
                 lblPhoto.setIcon(Photo);
             }
         }

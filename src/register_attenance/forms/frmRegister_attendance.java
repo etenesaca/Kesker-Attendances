@@ -32,7 +32,6 @@ import register_attenance.gl;
 import register_attenance.clsConnection_to_OERP;
 import register_attenance.hupernikao;
 import register_attenance.OpenERP.RespRegistrarAsisitencia;
-import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -55,6 +54,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
          * Acá redefinimos como se muestra, vemos q ahora lo forzamos a trabajar
          * con JLabel, pero si no lo es, por ejemplo un String igual lo muestro
          * llamando a Super
+         *
+         * @param table
+         * @param value
+         * @param isSelected
+         * @param hasFocus
+         * @param row
+         * @param column
+         * @return
          */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -72,6 +79,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
          * Este método es para que pinte el fondo del JLabel cuando lo
          * seleccionamos para que no quede en blanco, desentonando con el resto
          * de las celdas que no son JLabel
+         *
          * @param t
          * @param l
          * @param isSelected
@@ -109,20 +117,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         int port = gl.getPort();
         String db = "" + gl.getDb();
 
-        gl gl_obj = new gl();
-        Vector<Event> Eventos = new Vector<Event>();
-        try {
-            Eventos = clsConnection_to_OERP.get_today_events(uid, password, ip, port, db);
-        } catch (Exception ex) {
-            Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
         int hour;
         Calendar Cal = Calendar.getInstance();
         hour = Cal.get(Calendar.HOUR);
 
         Event current_event = null;
         DefaultListModel mdleventos = new DefaultListModel();
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+        List<Event> Eventos = oerp.getEventsToday();
         for (Event event : Eventos) {
             if (event.isCurrent_event()) {
                 current_event = event;
@@ -199,7 +201,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 minutos_restantes = (segundos_restantes / 60) % 60;
                 segundos_restantes_mod = segundos_restantes % 60;
 
-                String horas_restantes_str = null, minutos_restantes_str = null, segundos_restantes_str = null;
+                String horas_restantes_str, minutos_restantes_str, segundos_restantes_str;
 
                 if (("" + horas_restantes).length() < 2) {
                     horas_restantes_str = "0" + horas_restantes;
@@ -312,14 +314,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             for (int i = 0; filas > i; i++) {
                 modelo.removeRow(0);
             }
-            String nombre_guardado = null, nombre_buscado = null;
+            String nombre_guardado, nombre_buscado;
             nombre_buscado = txtCollaborator.getText().toLowerCase();
             for (int i = 0; gl.getFilas() > i; i++) {
                 Vector Coll = (Vector) gl.getCollaborator_vector().get(i);
                 nombre_guardado = "" + Coll.get(2);
                 nombre_guardado = nombre_guardado.toLowerCase();
                 int res = nombre_guardado.indexOf(nombre_buscado.toLowerCase());
-                if (nombre_guardado.indexOf(nombre_buscado.toLowerCase()) != -1) {
+                if (nombre_guardado.contains(nombre_buscado.toLowerCase())) {
                     Object[] fila = new Object[Coll.size()];
                     for (int j = 0; j < Coll.size(); j++) {
                         fila[j] = Coll.get(j);
@@ -360,8 +362,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             try {
                 String photo_field = "photo_small";
                 HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
-                String photo_str = Collaborator.get(photo_field).toString();
-                byte[] foto = new BASE64Decoder().decodeBuffer(new String(photo_str.getBytes()));
+                byte[] foto = hupernikao.DecodeB64ToBytes(Collaborator.get(photo_field).toString());
                 ImageIcon Photo = hupernikao.ReziseImage(foto, gl.size_thumbnails);
                 if (this.modelo != null) {
                     this.modelo.setValueAt(new JLabel(Photo), this.row, this.column);
@@ -475,13 +476,13 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
         }
 
-        String res = "";
-        res = "<html>Registrados <b>" + registradores + "</b>  |  Faltantes <b>" + faltantes + "</b></html>";
+        String res = "<html>Registrados <b>" + registradores + "</b>  |  Faltantes <b>" + faltantes + "</b></html>";
         lblcolaboradores_registrados.setText(res);
     }
 
     private class colaboradores_registrados extends Thread {
 
+        @SuppressWarnings("empty-statement")
         public void marcar_colaboradores() {
             int uid = Integer.parseInt("" + gl.user.get(0));
             String password = "" + gl.user.get(3);
@@ -1084,7 +1085,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             //Dias--------------------------------------
             days = (int) sec_base;
 
-            String horas_restantes_str = null, minutos_restantes_str = null, segundos_restantes_str = null;
+            String horas_restantes_str, minutos_restantes_str, segundos_restantes_str;
 
             if (("" + hours).length() < 2) {
                 horas_restantes_str = "0" + hours;
@@ -1140,7 +1141,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         String nombre_usuario;
-        nombre_usuario = ((String) gl.user.get(2)).toString();
+        nombre_usuario = ((String) gl.user.get(2));
         this.lblUsuario.setText("OpenERP - http://" + nombre_usuario + "@" + gl.getHost() + "/" + gl.getDb());
         //Instanciar un el Timer
         timer_obj = new Timer(1000, new iTimer());
@@ -1349,6 +1350,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new frmRegister_attendance().setVisible(true);
             }

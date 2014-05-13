@@ -5,7 +5,8 @@
         <group>
             <file>file:/home/edgar/Dropbox/Projects/ke+/register_attendance/trunk/src/register_attenance/hupernikao.java</file>
             <file>file:/home/edgar/Dropbox/Projects/ke+/register_attendance/trunk/src/register_attenance/forms/frmRegister_attendance.java</file>
-            <file>file:/home/edgar/Dropbox/Projects/ke+/register_attendance/trunk/src/register_attenance/forms/frmOK.java</file>
+            <file>file:/home/edgar/Dropbox/Projects/ke+/register_attendance/trunk/src/register_attenance/clsConnection_to_OERP.java</file>
+            <file>file:/home/edgar/Dropbox/Projects/ke+/register_attendance/trunk/src/register_attenance/OpenERP.java</file>
         </group>
     </open-files>
 </project-private>

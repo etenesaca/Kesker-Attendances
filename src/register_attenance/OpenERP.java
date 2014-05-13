@@ -23,6 +23,48 @@ public class OpenERP extends OpenERPConnection {
         checkout
     }
 
+    public List<Event> getEventsToday() {
+        XmlRpcClient client = build_xmlrcp_client(mUrl);
+
+        List<Object> params = new ArrayList<Object>();
+        params.add(getDatabase());
+        params.add(getUserId());
+        params.add(getPassword());
+        params.add("kemas.event");
+        params.add("get_today_events");
+
+        List<Event> result = new ArrayList<Event>();
+        try {
+            Object[] Events_obj = (Object[]) client.execute("execute", params);
+            for (Object Event_obj : Events_obj) {
+                HashMap event = (HashMap) Event_obj;
+
+                Event event_ent = new Event();
+                event_ent.setId(Integer.parseInt("" + event.get("id")));
+                event_ent.setName("" + event.get("name"));
+                event_ent.setTime_entry("" + event.get("time_entry"));
+                event_ent.setTime_entry_int(Integer.parseInt("" + event.get("time_entry_int")));
+
+                event_ent.setTime_register("" + event.get("time_register"));
+                event_ent.setTime_register_int(Integer.parseInt("" + event.get("time_register_int")));
+
+                event_ent.setTime_limit("" + event.get("time_limit"));
+                event_ent.setTime_limit_int(Integer.parseInt("" + event.get("time_limit_int")));
+
+                event_ent.setTime_start("" + event.get("time_start"));
+                event_ent.setTime_start_int(Integer.parseInt("" + event.get("time_start_int")));
+                event_ent.setTime_end("" + event.get("time_end"));
+                event_ent.setTime_end_int(Integer.parseInt("" + event.get("time_end_int")));
+                event_ent.setCurrent_event(Boolean.parseBoolean("" + event.get("current_event")));
+
+                result.add(event_ent);
+            }
+        } catch (XmlRpcException ex) {
+            Logger.getLogger(OpenERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
     public RespRegistrarAsisitencia RegisterAttendance(String reg_username, String reg_password) {
         XmlRpcClient client = build_xmlrcp_client(mUrl);
 

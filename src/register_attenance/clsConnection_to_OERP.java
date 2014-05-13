@@ -4,20 +4,13 @@
  */
 package register_attenance;
 
-import java.util.*;
-import java.text.*;
 //XML-RPC==============================================================
 //========Login
-import sun.misc.BASE64Decoder;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Blob;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 //=====================================================================
@@ -125,7 +118,7 @@ public class clsConnection_to_OERP {
             Object id;
             try {
                 id = xmlrpcLogin.execute("login", params);
-            } catch (Exception e) {
+            } catch (XmlRpcException e) {
                 return "error_conexion";
             }
 
@@ -220,17 +213,6 @@ public class clsConnection_to_OERP {
         return resp_read;
     }
 
-    public static byte[] decode(byte[] b) throws Exception {
-        BASE64Decoder decoder = new BASE64Decoder();
-        try {
-            byte[] decodedBytes = decoder.decodeBuffer(new String(b));
-            return decodedBytes;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public boolean is_register_attedance_login(int uid, String password, String ip, int port, String db) throws Exception {
         XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
@@ -290,49 +272,5 @@ public class clsConnection_to_OERP {
         } else {
             return null;
         }
-    }
-
-    public static Vector<Event> get_today_events(int uid, String password, String ip, int port, String db) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.event");
-        arg.add("get_today_events");
-
-        Object[] events = (Object[]) client.execute("execute", arg);
-
-        Vector<Event> Eventos = new Vector<Event>();
-        for (Object event_dic : events) {
-            HashMap event = (HashMap) event_dic;
-
-            Event event_ent = new Event();
-            event_ent.setId(Integer.parseInt("" + event.get("id")));
-            event_ent.setName("" + event.get("name"));
-            event_ent.setTime_entry("" + event.get("time_entry"));
-            event_ent.setTime_entry_int(Integer.parseInt("" + event.get("time_entry_int")));
-
-            event_ent.setTime_register("" + event.get("time_register"));
-            event_ent.setTime_register_int(Integer.parseInt("" + event.get("time_register_int")));
-
-            event_ent.setTime_limit("" + event.get("time_limit"));
-            event_ent.setTime_limit_int(Integer.parseInt("" + event.get("time_limit_int")));
-
-            event_ent.setTime_start("" + event.get("time_start"));
-            event_ent.setTime_start_int(Integer.parseInt("" + event.get("time_start_int")));
-            event_ent.setTime_end("" + event.get("time_end"));
-            event_ent.setTime_end_int(Integer.parseInt("" + event.get("time_end_int")));
-            event_ent.setCurrent_event(Boolean.parseBoolean("" + event.get("current_event")));
-
-            Eventos.add(event_ent);
-        }
-        return Eventos;
     }
 }
