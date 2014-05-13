@@ -14,8 +14,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
@@ -25,7 +23,6 @@ import javax.swing.border.AbstractBorder;
 import register_attenance.OpenERP;
 import register_attenance.gl;
 import register_attenance.hupernikao;
-import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -35,6 +32,7 @@ public class frmOK extends javax.swing.JDialog {
 
     /**
      * Creates new form frmOK
+     *
      * @param parent
      * @param modal
      */
@@ -275,8 +273,11 @@ public class frmOK extends javax.swing.JDialog {
             String photo_field = "photo_large";
             HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
             String photo_str = Collaborator.get(photo_field).toString();
-            ImageIcon Photo = hupernikao.ReziseImage(hupernikao.DecodeB64ToBytes(photo_str), 96);
-            lblPhoto.setIcon(Photo);
+            byte[] foto = hupernikao.DecodeB64ToBytes(photo_str);
+            if (foto != null) {
+                ImageIcon Photo = hupernikao.ReziseImage(foto, 96);
+                lblPhoto.setIcon(Photo);
+            }
         }
 
         @Override
