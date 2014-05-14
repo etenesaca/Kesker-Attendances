@@ -7,6 +7,7 @@ package register_attenance.forms;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -865,6 +866,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             tblCollaborators.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
+        txtCollaborator.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCollaboratorFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCollaboratorFocusLost(evt);
+            }
+        });
         txtCollaborator.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtCollaboratorKeyReleased(evt);
@@ -901,9 +910,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         pnlcollaboratorsLayout.setVerticalGroup(
             pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlcollaboratorsLayout.createSequentialGroup()
-                .addGroup(pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCollaborator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClearSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlcollaboratorsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnClearSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCollaborator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -964,7 +973,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         frmRegistrar_asistenciaLayout.setVerticalGroup(
             frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(frmRegistrar_asistenciaLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtusername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1061,9 +1070,9 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                         .addComponent(pnlcollaborators, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(12, 12, 12))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                         .addComponent(frmRegistrar_asistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -1152,7 +1161,8 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         txtCollaborator.setText("");
         Refresh();
         Actualizar_contadores();
-        txtCollaborator.requestFocus();
+        txtusername.requestFocus();
+        txtCollaboratorLostocus();
     }
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -1353,7 +1363,39 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         }
         txtCollaborator.requestFocus();
         RefreshButtonSearchIcon();
+        txtCollaboratorGotFocus();
     }//GEN-LAST:event_btnClearSearchActionPerformed
+
+    void txtCollaboratorGotFocus() {
+        Font fntLost = new Font(txtCollaborator.getFont().getName(), Font.ITALIC + Font.BOLD, txtCollaborator.getFont().getSize());
+        if (fntLost.equals(txtCollaborator.getFont())) {
+            txtCollaborator.setText("");
+        }
+        Font fntGot = new Font(txtCollaborator.getFont().getName(), Font.PLAIN, txtCollaborator.getFont().getSize());
+        txtCollaborator.setFont(fntGot);
+        txtCollaborator.setForeground(Color.BLACK);
+        txtCollaborator.requestFocus();
+    }
+    
+    void txtCollaboratorLostocus() {
+        if (txtCollaborator.getText().equals("")) {
+            txtCollaborator.setText(" Buscar");
+            Font fntLost = new Font(txtCollaborator.getFont().getName(), Font.ITALIC + Font.BOLD, txtCollaborator.getFont().getSize());
+            txtCollaborator.setFont(fntLost);
+            txtCollaborator.setForeground(Color.GRAY);
+        } else {
+            Font fntGot = new Font(txtCollaborator.getFont().getName(), Font.PLAIN, txtCollaborator.getFont().getSize());
+            txtCollaborator.setFont(fntGot);
+            txtCollaborator.setForeground(Color.BLACK);
+        }
+    }
+    private void txtCollaboratorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCollaboratorFocusLost
+        txtCollaboratorLostocus();
+    }//GEN-LAST:event_txtCollaboratorFocusLost
+
+    private void txtCollaboratorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCollaboratorFocusGained
+        txtCollaboratorGotFocus();
+    }//GEN-LAST:event_txtCollaboratorFocusGained
 
     /**
      * @param args the command line arguments
