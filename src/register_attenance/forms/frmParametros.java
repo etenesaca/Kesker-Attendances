@@ -7,6 +7,7 @@ package register_attenance.forms;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -350,7 +351,7 @@ public class frmParametros extends javax.swing.JDialog {
     
     private void recargar_databases(){
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
-        Vector<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(),Integer.parseInt(txtPort.getText()));
+        ArrayList<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(),Integer.parseInt(txtPort.getText()));
         cmbDb.removeAllItems();
         for (String db : DatabaseList){
             cmbDb.addItem(db);

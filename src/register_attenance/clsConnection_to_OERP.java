@@ -8,8 +8,11 @@ package register_attenance;
 //========Login
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -20,7 +23,12 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  * @author edgar
  */
 public class clsConnection_to_OERP {
-
+    protected static int SecondsToSleep = 500;
+    protected static int SecondsToWait = 8000;
+    public static ArrayList<String> DbList_GL;
+    public static XmlRpcClient xmlrpcDb_GL;
+    public static ArrayList<Object> params_GL;
+    
     public boolean test_connection_method() {
         XmlRpcClient xmlrpcLogin = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
@@ -32,9 +40,9 @@ public class clsConnection_to_OERP {
             return false;
         }
         try {
-            Object res = xmlrpcLogin.execute("check_connectivity", new Vector());
+            Object res = xmlrpcLogin.execute("check_connectivity", new ArrayList<Object>());
             return Boolean.parseBoolean(res + "");
-        } catch (Exception e) {
+        } catch (XmlRpcException e) {
             return false;
         }
     }
@@ -47,14 +55,14 @@ public class clsConnection_to_OERP {
             }
         });
         thread.start();
-        long endTimeMillis = System.currentTimeMillis() + 10000;
+        long endTimeMillis = System.currentTimeMillis() + SecondsToWait;
         while (thread.isAlive()) {
             if (System.currentTimeMillis() > endTimeMillis) {
                 gl.connected = false;
                 break;
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(SecondsToSleep);
             } catch (InterruptedException t) {
             }
         }
@@ -64,9 +72,49 @@ public class clsConnection_to_OERP {
         test_connection_execute();
         return gl.connected;
     }
+    
+    public ArrayList<String> getDBList_method(){
+        ArrayList<String> res = null;
+        try {
+            Object result = xmlrpcDb_GL.execute("list", params_GL);
+            Object[] a = (Object[]) result;
 
-    public Vector<String> getDatabaseList(String host, int port) {
-        Vector aux = new Vector<String>();
+            res = new ArrayList<String>();
+            for (int i = 0; i < a.length; i++) {
+                if (a[i] instanceof String) {
+                    res.add((String) a[i]);
+                }
+            }
+        } catch (XmlRpcException ex) {
+            Logger.getLogger(clsConnection_to_OERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    public void getDBList_excute(XmlRpcClient xmlrpcDb, ArrayList<Object> params) {
+        params_GL = params;
+        xmlrpcDb_GL = xmlrpcDb;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DbList_GL = getDBList_method();
+            }
+        });
+        thread.start();
+        long endTimeMillis = System.currentTimeMillis() + SecondsToWait;
+        while (thread.isAlive()) {
+            if (System.currentTimeMillis() > endTimeMillis) {
+                DbList_GL = null;
+                break;
+            }
+            try {
+                Thread.sleep(SecondsToSleep);
+            } catch (InterruptedException t) {
+            }
+        }
+    }
+    
+    public ArrayList<String> getDatabaseList(String host, int port) {
+        ArrayList<String> DatabasesList = new ArrayList<String>();
         XmlRpcClient xmlrpcDb = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigDb = new XmlRpcClientConfigImpl();
         xmlrpcConfigDb.setEnabledForExtensions(true);
@@ -74,24 +122,14 @@ public class clsConnection_to_OERP {
             xmlrpcConfigDb.setServerURL(new URL("http", host, port, "/xmlrpc/db"));
             xmlrpcDb.setConfig(xmlrpcConfigDb);
         } catch (MalformedURLException ex) {
-
-            return aux;
+            return DatabasesList;
         }
         try {
-            //Retrieve databases
-            Vector<Object> params = new Vector<Object>();
-            Object result = xmlrpcDb.execute("list", params);
-            Object[] a = (Object[]) result;
-
-            Vector<String> res = new Vector<String>();
-            for (int i = 0; i < a.length; i++) {
-                if (a[i] instanceof String) {
-                    res.addElement((String) a[i]);
-                }
-            }
-            return res;
+            ArrayList<Object> params = new ArrayList<Object>();
+            this.getDBList_excute(xmlrpcDb, params);
+            return DbList_GL;
         } catch (Exception e) {
-            return aux;
+            return DatabasesList;
         }
     }
 
@@ -160,14 +198,14 @@ public class clsConnection_to_OERP {
             }
         });
         thread.start();
-        long endTimeMillis = System.currentTimeMillis() + 10000;
+        long endTimeMillis = System.currentTimeMillis() + SecondsToWait;
         while (thread.isAlive()) {
             if (System.currentTimeMillis() > endTimeMillis) {
                 gl.login_status = "error";
                 break;
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(SecondsToSleep);
             } catch (InterruptedException t) {
             }
         }
