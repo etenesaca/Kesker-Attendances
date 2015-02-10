@@ -8,8 +8,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -205,73 +203,72 @@ public class frmParametros extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private boolean validar_cajas(){
+    private boolean validar_cajas() {
         boolean resp;
-        if ("".equals(this.txtHost.getText())){
-            JOptionPane.showMessageDialog(null, "Primero Ingresa la Dirección del Host","Aviso", JOptionPane.WARNING_MESSAGE);
+        if ("".equals(this.txtHost.getText())) {
+            JOptionPane.showMessageDialog(null, "Primero Ingresa la Dirección del Host", "Aviso", JOptionPane.WARNING_MESSAGE);
             this.txtHost.requestFocus();
             resp = false;
-        }
-        else{
-            if ("".equals(this.txtPort.getText())){
-                JOptionPane.showMessageDialog(null, "Ingresa el número del Puerto","Aviso", JOptionPane.WARNING_MESSAGE);
+        } else {
+            if ("".equals(this.txtPort.getText())) {
+                JOptionPane.showMessageDialog(null, "Ingresa el número del Puerto", "Aviso", JOptionPane.WARNING_MESSAGE);
                 this.txtPort.requestFocus();
                 resp = false;
-            }
-            else{
-               String selected_db = "";
-               try {
-                 selected_db = cmbDb.getSelectedItem().toString();
-               } catch (Exception e) {}
-               if ("".equals(selected_db)){
-                    JOptionPane.showMessageDialog(null, "Ingresa el Nombre de la Base de Datos a la cual se va a conectar.","Aviso", JOptionPane.WARNING_MESSAGE);
+            } else {
+                String selected_db = "";
+                try {
+                    selected_db = cmbDb.getSelectedItem().toString();
+                } catch (Exception e) {
+                }
+                if ("".equals(selected_db)) {
+                    JOptionPane.showMessageDialog(null, "Ingresa el Nombre de la Base de Datos a la cual se va a conectar.", "Aviso", JOptionPane.WARNING_MESSAGE);
                     this.cmbDb.requestFocus();
                     resp = false;
-                }
-                else{
-                   resp = true; 
+                } else {
+                    resp = true;
                 }
             }
         }
         return resp;
     }
-    void Test_Connection(){
+
+    void Test_Connection() {
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
         String selected_db = "";
         try {
-          selected_db = cmbDb.getSelectedItem().toString();
-        } catch (Exception e) {}
-        String resp_login = con_oerp.login("test","6JtigKav8QQkqOpCcE3TMYYKtRtJzGG3hxcIAEe/ywQ=", txtHost.getText(), Integer.parseInt(txtPort.getText()), selected_db);
-        if ("error_conexion".equals(resp_login)){
-            JOptionPane.showMessageDialog(null, "Error de Conexión.","Error", JOptionPane.ERROR_MESSAGE);
+            selected_db = cmbDb.getSelectedItem().toString();
+        } catch (Exception e) {
         }
-        else{
-            if ("error_login".equals(resp_login)){
-                JOptionPane.showMessageDialog(null, "Error de Conexión.","Error", JOptionPane.ERROR_MESSAGE);
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Conexión Correcta." ,"Ok", JOptionPane.INFORMATION_MESSAGE);
+        String resp_login = con_oerp.login("test", "6JtigKav8QQkqOpCcE3TMYYKtRtJzGG3hxcIAEe/ywQ=", txtHost.getText(), Integer.parseInt(txtPort.getText()), selected_db);
+        if ("error_conexion".equals(resp_login)) {
+            JOptionPane.showMessageDialog(null, "Error de Conexión.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if ("error_login".equals(resp_login)) {
+                JOptionPane.showMessageDialog(null, "Error de Conexión.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Conexión Correcta.", "Ok", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
-    void Aceptar(){
-        if (this.validar_cajas()){
-            Object [] opciones ={"Aceptar","Cancelar"};
-            JOptionPane nombreDelDialogo= new JOptionPane();
+
+    void Aceptar() {
+        if (this.validar_cajas()) {
+            Object[] opciones = {"Aceptar", "Cancelar"};
+            JOptionPane nombreDelDialogo = new JOptionPane();
             int eleccion = JOptionPane.showOptionDialog(null,
-            "¿Estás seguro de cambiar los parametros de conexión del Sistema?",
-            "Confirmar",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opciones,
-            "Aceptar");
-            if (eleccion == JOptionPane.YES_OPTION)
-            {
+                    "¿Estás seguro de cambiar los parametros de conexión del Sistema?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    "Aceptar");
+            if (eleccion == JOptionPane.YES_OPTION) {
                 String selected_db = "";
                 try {
-                  selected_db = cmbDb.getSelectedItem().toString();
-                } catch (Exception e) {}
+                    selected_db = cmbDb.getSelectedItem().toString();
+                } catch (Exception e) {
+                }
                 try {
                     gl.setHost(txtHost.getText());
                     gl.setPort(txtPort.getText());
@@ -283,20 +280,20 @@ public class frmParametros extends javax.swing.JDialog {
             }
         }
     }
-    
+
     private void centrarVentana() {
         // Se obtienen las dimensiones en pixels de la pantalla.
         Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
         // Se obtienen las dimensiones en pixels de la ventana.
         Dimension ventana = getSize();
         // Una cuenta para situar la ventana en el centro de la pantalla.
-        setLocation((pantalla.width - ventana.width) / 2,(pantalla.height - ventana.height) / 2);
+        setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
     }
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         centrarVentana();
         txtHost.setText(gl.getHost());
         txtPort.setText("" + gl.getPort());
-        
+
         recargar_databases();
         cmbDb.setSelectedItem(gl.getDb());
     }//GEN-LAST:event_formWindowOpened
@@ -310,7 +307,7 @@ public class frmParametros extends javax.swing.JDialog {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnTestConnectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestConnectionActionPerformed
-        if (this.validar_cajas()){
+        if (this.validar_cajas()) {
             Test_Connection();
         }
     }//GEN-LAST:event_btnTestConnectionActionPerformed
@@ -319,7 +316,8 @@ public class frmParametros extends javax.swing.JDialog {
         String current_db = "";
         try {
             current_db = cmbDb.getSelectedItem().toString();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         recargar_databases();
         cmbDb.setSelectedItem(current_db);
     }//GEN-LAST:event_cmbDbFocusGained
@@ -348,16 +346,16 @@ public class frmParametros extends javax.swing.JDialog {
     private void cmbDbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDbActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbDbActionPerformed
-    
-    private void recargar_databases(){
+
+    private void recargar_databases() {
         clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
-        ArrayList<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(),Integer.parseInt(txtPort.getText()));
+        ArrayList<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(), Integer.parseInt(txtPort.getText()));
         cmbDb.removeAllItems();
-        for (String db : DatabaseList){
+        for (String db : DatabaseList) {
             cmbDb.addItem(db);
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
