@@ -22,9 +22,9 @@ public class hupernikao {
     public static OpenERP BuildOpenERPConnection() {
         OpenERP oerp = null;
 
-        int uid = Integer.parseInt("" + gl.user.get(0));
-        String username = "" + gl.user.get(2);
-        String password = "" + gl.user.get(3);
+        int uid = Integer.parseInt(gl.user.get("id").toString());
+        String username = "" + gl.user.get("login").toString();
+        String password = "" + gl.user.get("password").toString();
         String server = gl.getHost();
         int port = gl.getPort();
         String db = gl.getDb();

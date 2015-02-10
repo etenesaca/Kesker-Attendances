@@ -113,8 +113,8 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     public void Refresh() {
         //Cargar Evento del día de hoy
-        int uid = Integer.parseInt("" + gl.user.get(0));
-        String password = "" + gl.user.get(3);
+        int uid = Integer.parseInt("" + gl.user.get("id"));
+        String password = "" + gl.user.get("password");
         String ip = gl.getHost();
         int port = gl.getPort();
         String db = "" + gl.getDb();
@@ -159,12 +159,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             colaboradores_del_evento_obj.start();
         } else {
             //---Cargar proximo evento---------------
-            HashMap Evento = null;
-            try {
-                Evento = clsConnection_to_OERP.get_next_event(uid, password, ip, port, db);
-            } catch (Exception ex) {
-                Logger.getLogger(frmRegister_attendance.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            HashMap Evento = clsConnection_to_OERP.get_next_event();
             gl.setNext_event(Evento);
             gl.setSeconds_sum(0);
             //---------------------------------------
@@ -391,12 +386,6 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         }
 
         public void load_collaborator() {
-            int uid = Integer.parseInt("" + gl.user.get(0));
-            String password = "" + gl.user.get(3);
-            String ip = gl.getHost();
-            int port = gl.getPort();
-            String db = "" + gl.getDb();
-
             OpenERP oerp = hupernikao.BuildOpenERPConnection();
             List<Collaborator> Colaboradores = oerp.getEventCollaborators(this.event_id);
 
@@ -486,12 +475,6 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
         @SuppressWarnings("empty-statement")
         public void marcar_colaboradores() {
-            int uid = Integer.parseInt("" + gl.user.get(0));
-            String password = "" + gl.user.get(3);
-            String ip = gl.getHost();
-            int port = gl.getPort();
-            String db = "" + gl.getDb();
-
             OpenERP oerp = hupernikao.BuildOpenERPConnection();
             List<HashMap<String, Object>> Colaboradores = oerp.getCollaboratorsRegistereds(gl.Current_event.getId());;
 
@@ -1167,8 +1150,8 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         String nombre_usuario;
-        nombre_usuario = ((String) gl.user.get(2));
-        this.lblUsuario.setText("OpenERP - http://" + nombre_usuario + "@" + gl.getHost() + "/" + gl.getDb());
+        nombre_usuario = gl.user.get("login").toString();
+        this.lblUsuario.setText("Odoo - http://" + nombre_usuario + "@" + gl.getHost() + "/" + gl.getDb());
         //Instanciar un el Timer
         timer_obj = new Timer(1000, new iTimer());
         timer_obj.start();
@@ -1210,12 +1193,6 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     void Aceptar() {
         if (this.validar_cajas()) {
-            clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
-            int uid = Integer.parseInt("" + gl.user.get(0));
-            String password = "" + gl.user.get(3);
-            String ip = gl.getHost();
-            int port = gl.getPort();
-            String db = gl.getDb();
             String reg_username = txtusername.getText();
             String reg_password = txtpassword.getText();
 
@@ -1376,7 +1353,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         txtCollaborator.setForeground(Color.BLACK);
         txtCollaborator.requestFocus();
     }
-    
+
     void txtCollaboratorLostocus() {
         if (txtCollaborator.getText().equals("")) {
             txtCollaborator.setText(" Buscar");

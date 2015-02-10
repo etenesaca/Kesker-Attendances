@@ -10,12 +10,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import static register_attenance.OpenERPConnection.XmlRpcClienType.Common;
+import static register_attenance.OpenERPConnection.XmlRpcClienType.DB;
+import static register_attenance.OpenERPConnection.XmlRpcClienType.Object;
 //=====================================================================
 
 /**
@@ -117,19 +119,11 @@ public class clsConnection_to_OERP {
     }
 
     public ArrayList<String> getDatabaseList(String host, int port) {
+        XmlRpcClient client = OpenERP.build_xmlrcp_client(host, port, DB);
         ArrayList<String> DatabasesList = new ArrayList<String>();
-        XmlRpcClient xmlrpcDb = new XmlRpcClient();
-        XmlRpcClientConfigImpl xmlrpcConfigDb = new XmlRpcClientConfigImpl();
-        xmlrpcConfigDb.setEnabledForExtensions(true);
-        try {
-            xmlrpcConfigDb.setServerURL(new URL("http", host, port, "/xmlrpc/db"));
-            xmlrpcDb.setConfig(xmlrpcConfigDb);
-        } catch (MalformedURLException ex) {
-            return DatabasesList;
-        }
         try {
             ArrayList<Object> params = new ArrayList<Object>();
-            this.getDBList_excute(xmlrpcDb, params);
+            this.getDBList_excute(client, params);
             return DbList_GL;
         } catch (Exception e) {
             return DatabasesList;
@@ -140,15 +134,7 @@ public class clsConnection_to_OERP {
         if (test_connection() == false) {
             return "error_conexion";
         }
-        XmlRpcClient cliente = new XmlRpcClient();
-        XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
-        xmlrpcConfigLogin.setEnabledForExtensions(true);
-        try {
-            xmlrpcConfigLogin.setServerURL(new URL("http", ip, port, "/xmlrpc/common"));
-        } catch (MalformedURLException ex) {
-            return "error_conexion";
-        }
-        cliente.setConfig(xmlrpcConfigLogin);
+        XmlRpcClient cliente = OpenERP.build_xmlrcp_client(ip, port, Common);
         try {
             Object[] params = new Object[]{db, username, password};
             Object res_uid;
@@ -165,17 +151,13 @@ public class clsConnection_to_OERP {
             int uid = ((Integer) res_uid);
             OpenERP oerp = new OpenERP(ip, port, db, username, password, uid);
             HashMap<String, Object> user = oerp.read("res.users", uid, new String[]{"name", "login", "password", "email", "groups_id"});
+            user.put("password", password);
             gl.user = user;
             gl.Db = db;
             gl.Host = ip;
             gl.Port = port;
             String nombre = user.get("name").toString();
-            boolean is_consultant_login = false;
-            try {
-                is_consultant_login = is_register_attedance_login(uid, password, ip, port, db);
-            } catch (Exception ex) {
-            }
-            if (is_consultant_login == false) {
+            if (!is_register_attedance_login(uid)) {
                 return "not_is_consultant_login";
             }
             return nombre;
@@ -210,64 +192,33 @@ public class clsConnection_to_OERP {
         return gl.login_status;
     }
 
-    public boolean is_register_attedance_login(int uid, String password, String ip, int port, String db) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
+    public boolean is_register_attedance_login(int uid) {
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+        XmlRpcClient client = oerp.build_xmlrcp_client(Object);
 
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.func");
-        arg.add("is_register_attedance_login");
-
-        Object resp = client.execute("execute", arg);
-        return Boolean.parseBoolean(resp + "");
-    }
-
-    public boolean is_consultant_login(int uid, String password, String ip, int port, String db) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.func");
-        arg.add("is_consultant_login");
-
-        Object resp = client.execute("execute", arg);
-        return Boolean.parseBoolean(resp + "");
-    }
-
-    public static HashMap get_next_event(int uid, String password, String ip, int port, String db) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("kemas.event");
-        arg.add("get_next_event");
-
-        Object event = (Object) client.execute("execute", arg);
-        if (!"false".equals(event.toString())) {
-            return (HashMap) event;
-        } else {
-            return null;
+        Object[] params = new Object[]{gl.Db, uid, gl.user.get("password").toString(), "kemas.func", "is_in_this_groups", "group_kemas_register_attedance"};
+        Object resp = "false";
+        try {
+            resp = client.execute("execute", params);
+        } catch (XmlRpcException e) {
         }
+        return Boolean.parseBoolean(resp + "");
+    }
+
+    public static HashMap get_next_event() {
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+        XmlRpcClient client = oerp.build_xmlrcp_client(Object);
+
+        Object[] params = new Object[]{oerp.getDatabase(), oerp.getUserId(), oerp.getPassword(), "kemas.event", "get_next_event"};
+        HashMap result = null;
+        try {
+            Object event = (Object) client.execute("execute", params);
+            if (!"false".equals(event.toString())) {
+                result = (HashMap) event;
+            }
+        } catch (XmlRpcException ex) {
+            Logger.getLogger(clsConnection_to_OERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 }

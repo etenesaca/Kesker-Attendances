@@ -206,7 +206,7 @@ public class OpenERPConnection {
         }
         return read(model, res_ids, fields);
     }
-    
+
     public List<HashMap<String, Object>> read(String model, List<Long> ids, String[] fields) {
         Object[] object_ids = (Object[]) ids.toArray();
         Long[] res_ids = new Long[object_ids.length];
@@ -228,6 +228,53 @@ public class OpenERPConnection {
             Logger.getLogger(OpenERPConnection.class.getName()).log(Level.SEVERE, null, e);
         }
         return Record;
+    }
+
+    public enum XmlRpcClienType {
+
+        DB,
+        Common,
+        Object
+    }
+
+    public static XmlRpcClient build_xmlrcp_client(String host, int port, XmlRpcClienType cliente_type) {
+        XmlRpcClient client = new XmlRpcClient();
+        String cliente_type_str = "object";
+        if (cliente_type == XmlRpcClienType.Common) {
+            cliente_type_str = "common";
+        } else if (cliente_type == XmlRpcClienType.DB) {
+            cliente_type_str = "db";
+        }
+        try {
+            URL URL_request = new URL("http", host, port, "/xmlrpc/" + cliente_type_str);
+            XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
+            xmlrpcConfigLogin.setEnabledForExtensions(true);
+            xmlrpcConfigLogin.setServerURL(URL_request);
+            client.setConfig(xmlrpcConfigLogin);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(OpenERPConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return client;
+    }
+
+    @SuppressWarnings("empty-statement")
+    public XmlRpcClient build_xmlrcp_client(XmlRpcClienType cliente_type) {
+        XmlRpcClient client = new XmlRpcClient();
+        URL URL_request = null;
+        try {
+            if (cliente_type == XmlRpcClienType.DB) {
+                URL_request = new URL("http", gl.Host, gl.Port, "/xmlrpc/db");
+            } else if (cliente_type == XmlRpcClienType.Common) {
+                URL_request = new URL("http", gl.Host, gl.Port, "/xmlrpc/common");;
+            } else if (cliente_type == XmlRpcClienType.Object) {
+                URL_request = new URL("http", gl.Host, gl.Port, "/xmlrpc/object");;
+            }
+
+            client = build_xmlrcp_client(URL_request);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(OpenERPConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return client;
     }
 
     public XmlRpcClient build_xmlrcp_client(URL URL_request) {
