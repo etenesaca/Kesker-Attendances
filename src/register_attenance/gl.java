@@ -28,7 +28,7 @@ import javax.swing.table.TableModel;
 public class gl {
     public static Event Current_event;
     public static Collaborator Login_Collaborator;
-    public static Vector user;              //Usuario logueado
+    public static HashMap<String, Object> user;              //Usuario logueado
     public static String Host;              //IP a la cual se conecta
     public static int Port;                 //Puerto al que se conecta
     public static String Db;                //db

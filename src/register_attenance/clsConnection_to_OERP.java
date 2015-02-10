@@ -23,28 +23,32 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  * @author edgar
  */
 public class clsConnection_to_OERP {
+
     protected static int SecondsToSleep = 500;
     protected static int SecondsToWait = 8000;
     public static ArrayList<String> DbList_GL;
     public static XmlRpcClient xmlrpcDb_GL;
     public static ArrayList<Object> params_GL;
-    
+
     public boolean test_connection_method() {
-        XmlRpcClient xmlrpcLogin = new XmlRpcClient();
+        XmlRpcClient client = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);
+
         try {
             xmlrpcConfigLogin.setServerURL(new URL("http", gl.getHost(), gl.getPort(), "/xmlrpc/common"));
-            xmlrpcLogin.setConfig(xmlrpcConfigLogin);
+            client.setConfig(xmlrpcConfigLogin);
         } catch (MalformedURLException ex) {
             return false;
         }
+        boolean result = false;
         try {
-            Object res = xmlrpcLogin.execute("check_connectivity", new ArrayList<Object>());
-            return Boolean.parseBoolean(res + "");
+            //Object res = client.execute("check_connectivity", new ArrayList<Object>());
+            Object version = client.execute("version", new ArrayList<Object>());
+            result = true;
         } catch (XmlRpcException e) {
-            return false;
         }
+        return result;
     }
 
     public void test_connection_execute() {
@@ -72,17 +76,15 @@ public class clsConnection_to_OERP {
         test_connection_execute();
         return gl.connected;
     }
-    
-    public ArrayList<String> getDBList_method(){
+
+    public ArrayList<String> getDBList_method() {
         ArrayList<String> res = null;
         try {
-            Object result = xmlrpcDb_GL.execute("list", params_GL);
-            Object[] a = (Object[]) result;
-
+            Object[] db_list = (Object[]) xmlrpcDb_GL.execute("list", params_GL);
             res = new ArrayList<String>();
-            for (int i = 0; i < a.length; i++) {
-                if (a[i] instanceof String) {
-                    res.add((String) a[i]);
+            for (Object db : db_list) {
+                if (db instanceof String) {
+                    res.add((String) db);
                 }
             }
         } catch (XmlRpcException ex) {
@@ -90,6 +92,7 @@ public class clsConnection_to_OERP {
         }
         return res;
     }
+
     public void getDBList_excute(XmlRpcClient xmlrpcDb, ArrayList<Object> params) {
         params_GL = params;
         xmlrpcDb_GL = xmlrpcDb;
@@ -112,7 +115,7 @@ public class clsConnection_to_OERP {
             }
         }
     }
-    
+
     public ArrayList<String> getDatabaseList(String host, int port) {
         ArrayList<String> DatabasesList = new ArrayList<String>();
         XmlRpcClient xmlrpcDb = new XmlRpcClient();
@@ -137,7 +140,7 @@ public class clsConnection_to_OERP {
         if (test_connection() == false) {
             return "error_conexion";
         }
-        XmlRpcClient xmlrpcLogin = new XmlRpcClient();
+        XmlRpcClient cliente = new XmlRpcClient();
         XmlRpcClientConfigImpl xmlrpcConfigLogin = new XmlRpcClientConfigImpl();
         xmlrpcConfigLogin.setEnabledForExtensions(true);
         try {
@@ -145,37 +148,28 @@ public class clsConnection_to_OERP {
         } catch (MalformedURLException ex) {
             return "error_conexion";
         }
-        xmlrpcLogin.setConfig(xmlrpcConfigLogin);
+        cliente.setConfig(xmlrpcConfigLogin);
         try {
-            // Connect
-            Vector params = new Vector();
-            params.addElement(db);
-            params.addElement(username);
-            params.addElement(password);
-
-            Object id;
+            Object[] params = new Object[]{db, username, password};
+            Object res_uid;
             try {
-                id = xmlrpcLogin.execute("login", params);
+                res_uid = cliente.execute("login", params);
             } catch (XmlRpcException e) {
                 return "error_conexion";
             }
 
-            if ("false".equals("" + id)) {
+            if ("false".equals("" + res_uid)) {
                 return "error_login";
             }
             //Traer los datos del Usuario Logueado
-            Vector<Object> user = new Vector<Object>();
-            int uid = ((Integer) id).intValue();
-            try {
-                user = read_user(uid, password, ip, port, db);
-            } catch (Exception ex) {
-                return "error_conexion";
-            }
+            int uid = ((Integer) res_uid);
+            OpenERP oerp = new OpenERP(ip, port, db, username, password, uid);
+            HashMap<String, Object> user = oerp.read("res.users", uid, new String[]{"name", "login", "password", "email", "groups_id"});
             gl.user = user;
             gl.Db = db;
             gl.Host = ip;
             gl.Port = port;
-            String nombre = ((String) user.get(1)).toString();
+            String nombre = user.get("name").toString();
             boolean is_consultant_login = false;
             try {
                 is_consultant_login = is_register_attedance_login(uid, password, ip, port, db);
@@ -185,7 +179,7 @@ public class clsConnection_to_OERP {
                 return "not_is_consultant_login";
             }
             return nombre;
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
             return "error_conexion";
         }
     }
@@ -214,41 +208,6 @@ public class clsConnection_to_OERP {
     public String login(String username, String password, String ip, int port, String db) {
         login_execute(username, password, ip, port, db);
         return gl.login_status;
-    }
-
-    public Vector read_user(int uid, String password, String ip, int port, String db) throws Exception {
-        XmlRpcClient client = new XmlRpcClient();
-        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setEnabledForExtensions(true);
-        clientConfig.setServerURL(new URL("http", ip, port, "/xmlrpc/object"));
-        client.setConfig(clientConfig);
-
-        Object[] params2 = {"id", "name", "login", "password", "user_email", "groups_id"};
-
-        Vector<Object> arg = new Vector<Object>();
-
-        arg.add(db);
-        arg.add(uid);
-        arg.add(password);
-        arg.add("res.users");
-        arg.add("read");
-        arg.add(uid);
-        arg.add(params2);
-
-        HashMap ids = (HashMap) client.execute("execute", arg);
-
-        Vector<Object> resp_read = new Vector<Object>();
-
-        Object[] groups = (Object[]) ids.get("groups_id");
-
-        resp_read.add(ids.get("id"));           //[0]
-        resp_read.add(ids.get("name"));         //[1]
-        resp_read.add(ids.get("login"));        //[2]
-        resp_read.add(ids.get("password"));     //[3]
-        resp_read.add(ids.get("user_email"));   //[4]
-        resp_read.add(ids.get("groups_id"));    //[5]
-        resp_read.add(groups);
-        return resp_read;
     }
 
     public boolean is_register_attedance_login(int uid, String password, String ip, int port, String db) throws Exception {
