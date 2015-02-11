@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import static register_attenance.OpenERPConnection.XmlRpcClienType.*;
 
 public class OpenERPConnection {
 
@@ -228,6 +229,35 @@ public class OpenERPConnection {
             Logger.getLogger(OpenERPConnection.class.getName()).log(Level.SEVERE, null, e);
         }
         return Record;
+    }
+
+    public static ArrayList<String> getDatabases(String server, int port) {
+        ArrayList<String> res = new ArrayList<String>();
+        try {
+            XmlRpcClient client = OpenERP.build_xmlrcp_client(server, port, DB);
+            Object[] db_list = (Object[]) client.execute("list", new ArrayList<Object>());
+            res = new ArrayList<String>();
+            for (Object db : db_list) {
+                if (db instanceof String) {
+                    res.add((String) db);
+                }
+            }
+        } catch (XmlRpcException ex) {
+            Logger.getLogger(clsConnection_to_OERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+
+    public static boolean TestConnection(String server, int port) {
+        XmlRpcClient client = build_xmlrcp_client(server, port, Common);
+        boolean result = false;
+        try {
+            //Object res = client.execute("check_connectivity", new ArrayList<Object>());
+            HashMap<String, Object> version = (HashMap<String, Object>) client.execute("version", new ArrayList<Object>());
+            result = true;
+        } catch (XmlRpcException e) {
+        }
+        return result;
     }
 
     public enum XmlRpcClienType {

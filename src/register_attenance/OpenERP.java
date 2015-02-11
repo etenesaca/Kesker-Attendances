@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
+import static register_attenance.OpenERPConnection.XmlRpcClienType.*;
 
 public class OpenERP extends OpenERPConnection {
 
@@ -61,6 +62,23 @@ public class OpenERP extends OpenERPConnection {
             }
         } catch (XmlRpcException ex) {
             Logger.getLogger(OpenERP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+    
+    public static HashMap get_next_event() {
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+        XmlRpcClient client = oerp.build_xmlrcp_client(Object);
+
+        Object[] params = new Object[]{oerp.getDatabase(), oerp.getUserId(), oerp.getPassword(), "kemas.event", "get_next_event"};
+        HashMap result = null;
+        try {
+            Object event = (Object) client.execute("execute", params);
+            if (!"false".equals(event.toString())) {
+                result = (HashMap) event;
+            }
+        } catch (XmlRpcException ex) {
+            Logger.getLogger(clsConnection_to_OERP.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

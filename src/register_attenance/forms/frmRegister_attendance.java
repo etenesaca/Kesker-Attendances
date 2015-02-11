@@ -158,7 +158,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             colaboradores_del_evento_obj.start();
         } else {
             //---Cargar proximo evento---------------
-            HashMap Evento = clsConnection_to_OERP.get_next_event();
+            HashMap Evento = OpenERP.get_next_event();
             gl.setNext_event(Evento);
             gl.setSeconds_sum(0);
             //---------------------------------------
