@@ -31,7 +31,7 @@ import register_attenance.Collaborator;
 import register_attenance.Event;
 import register_attenance.OpenERP;
 import register_attenance.gl;
-import register_attenance.clsConnection_to_OERP;
+import register_attenance.Threads;
 import register_attenance.hupernikao;
 import register_attenance.OpenERP.RespRegistrarAsisitencia;
 

@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import register_attenance.clsConnection_to_OERP;
+import register_attenance.Threads;
 import register_attenance.gl;
 
 /**
@@ -185,7 +185,7 @@ public class frmLogin extends javax.swing.JFrame {
     
     void Aceptar(){
         if (this.validar_cajas()){
-            clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
+            Threads con_oerp = new Threads();
             String resp_login = con_oerp.login(this.txtusername.getText(),this.txtpassword.getText(), gl.getHost(), gl.getPort(), gl.getDb());
             if ("error_conexion".equals(resp_login)){
                 JOptionPane.showMessageDialog(null, "No se ha podido establecer conexion con el Sistema. Verifique que los parametros de conexion sean correctos y vuelva a intentarlo.","Error", JOptionPane.ERROR_MESSAGE);

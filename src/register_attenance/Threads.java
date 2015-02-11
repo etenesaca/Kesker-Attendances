@@ -17,7 +17,7 @@ import static register_attenance.OpenERPConnection.XmlRpcClienType.*;
  *
  * @author edgar
  */
-public class clsConnection_to_OERP {
+public class Threads {
 
     protected static int SecondsToSleep = 500;
     protected static int SecondsToWait = 8000;

@@ -243,7 +243,7 @@ public class OpenERPConnection {
                 }
             }
         } catch (XmlRpcException ex) {
-            Logger.getLogger(clsConnection_to_OERP.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Threads.class.getName()).log(Level.SEVERE, null, ex);
         }
         return res;
     }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import register_attenance.clsConnection_to_OERP;
+import register_attenance.Threads;
 import register_attenance.gl;
 
 /**
@@ -233,7 +233,7 @@ public class frmParametros extends javax.swing.JDialog {
     }
 
     void Test_Connection() {
-        clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
+        Threads con_oerp = new Threads();
         String selected_db = "";
         try {
             selected_db = cmbDb.getSelectedItem().toString();
@@ -348,7 +348,7 @@ public class frmParametros extends javax.swing.JDialog {
     }//GEN-LAST:event_cmbDbActionPerformed
 
     private void recargar_databases() {
-        clsConnection_to_OERP con_oerp = new clsConnection_to_OERP();
+        Threads con_oerp = new Threads();
         ArrayList<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(), Integer.parseInt(txtPort.getText()));
         cmbDb.removeAllItems();
         for (String db : DatabaseList) {
