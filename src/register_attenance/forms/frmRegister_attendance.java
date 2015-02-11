@@ -45,8 +45,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     @Override
     public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().
-                getImage(getClass().getResource("/Imagenes/icon.png"));
+        Image retValue = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Imagenes/icon.png"));
         return retValue;
     }
 

@@ -31,6 +31,7 @@ public class gl {
     public static HashMap<String, Object> user;              //Usuario logueado
     public static String Host;              //IP a la cual se conecta
     public static int Port;                 //Puerto al que se conecta
+    public static String tz;                   //Zona horaria en la que se encuentra el servidor
     public static String Db;                //db
     public static HashMap Next_event;       //Porximo Evento
     public static int seconds_sum;          //segundos que se sumaron a los regundos recibidos

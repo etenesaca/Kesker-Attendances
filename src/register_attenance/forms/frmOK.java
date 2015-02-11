@@ -271,7 +271,7 @@ public class frmOK extends javax.swing.JDialog {
 
         public void getPhoto() {
             OpenERP oerp = hupernikao.BuildOpenERPConnection();
-            String photo_field = "photo_large";
+            String photo_field = "photo_medium";
             HashMap<String, Object> Collaborator = oerp.read("kemas.collaborator", this.collaborator_id, new String[]{photo_field});
             String photo_str = Collaborator.get(photo_field).toString();
             byte[] foto = hupernikao.DecodeB64ToBytes(photo_str);

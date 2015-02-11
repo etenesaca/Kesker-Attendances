@@ -140,6 +140,7 @@ public class clsConnection_to_OERP {
             Object res_uid;
             try {
                 res_uid = cliente.execute("login", params);
+                gl.tz = (String) cliente.execute("timezone_get", params);
             } catch (XmlRpcException e) {
                 return "error_conexion";
             }
