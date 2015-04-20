@@ -350,6 +350,10 @@ public class frmParametros extends javax.swing.JDialog {
     private void recargar_databases() {
         Threads con_oerp = new Threads();
         ArrayList<String> DatabaseList = con_oerp.getDatabaseList(txtHost.getText(), Integer.parseInt(txtPort.getText()));
+        if (DatabaseList == null){
+            DatabaseList = new ArrayList<String>(); 
+        }
+
         cmbDb.removeAllItems();
         for (String db : DatabaseList) {
             cmbDb.addItem(db);
