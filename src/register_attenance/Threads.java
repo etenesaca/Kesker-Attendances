@@ -53,7 +53,7 @@ public class Threads {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                DbList_GL = OpenERP.getDatabases(gl.getHost(), gl.getPort());
+                DbList_GL = OpenERP.getDatabases(gl.Host, gl.Port);
             }
         });
         thread.start();
