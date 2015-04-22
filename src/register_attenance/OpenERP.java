@@ -15,6 +15,7 @@ public class OpenERP extends OpenERPConnection {
     public enum RespRegistrarAsisitencia {
 
         Error_login,
+        Error_Card,
         No_Collaborator,
         No_staff,
         No_events,
@@ -83,7 +84,23 @@ public class OpenERP extends OpenERPConnection {
         return result;
     }
 
-    public RespRegistrarAsisitencia RegisterAttendance(String reg_username, String reg_password) {
+    public RespRegistrarAsisitencia RegisterAttendance_with_Card(String CardCode) {
+        XmlRpcClient client = build_xmlrcp_client(mUrl);
+
+        List<Object> params = new ArrayList<Object>();
+        HashMap<Object, Object> context = new HashMap<Object, Object>();
+        context.put("with_register_type", true);
+        params.add(getDatabase());
+        params.add(getUserId());
+        params.add(getPassword());
+        params.add("kemas.attendance");
+        params.add("register_attendance_with_card");
+        params.add(CardCode);
+        params.add(context);
+        return RegisterAttendance(params);
+    }
+    
+    public RespRegistrarAsisitencia RegisterAttendance_with_Login(String reg_username, String reg_password) {
         XmlRpcClient client = build_xmlrcp_client(mUrl);
 
         List<Object> params = new ArrayList<Object>();
@@ -97,7 +114,11 @@ public class OpenERP extends OpenERPConnection {
         params.add(reg_username);
         params.add(reg_password);
         params.add(context);
-
+        return RegisterAttendance(params);
+    }
+    
+    public RespRegistrarAsisitencia RegisterAttendance(List<Object> params) {
+        XmlRpcClient client = build_xmlrcp_client(mUrl);
         RespRegistrarAsisitencia result = null;
         try {
             Object resp = client.execute("execute", params);
@@ -114,6 +135,8 @@ public class OpenERP extends OpenERPConnection {
                 result = RespRegistrarAsisitencia.Already_register;
             } else if ("r_6".equals(_resp)) {
                 result = RespRegistrarAsisitencia.Already_checkout;
+            } else if ("r_7".equals(_resp)) {
+                result = RespRegistrarAsisitencia.Error_Card;
             } else {
                 HashMap<Object, Object> resp_dict = (HashMap<Object, Object>) resp;
                 if (resp_dict.get("register_type").equals("checkin")) {
@@ -213,6 +236,14 @@ public class OpenERP extends OpenERPConnection {
         String model = "kemas.collaborator";
         ArrayList<Object> args = new ArrayList<Object>();
         args.add(new Object[]{"user_id.login", "=", username});
+        Long[] collaborator_ids = search(model, args);
+        return getCollaborator(Integer.parseInt(collaborator_ids[0].toString()));
+    }
+    
+    public Collaborator getCollaborator_by_code(String code) {
+        String model = "kemas.collaborator";
+        ArrayList<Object> args = new ArrayList<Object>();
+        args.add(new Object[]{"code", "=", code});
         Long[] collaborator_ids = search(model, args);
         return getCollaborator(Integer.parseInt(collaborator_ids[0].toString()));
     }

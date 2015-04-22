@@ -983,6 +983,11 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 txtcardcodeActionPerformed(evt);
             }
         });
+        txtcardcode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcardcodeKeyReleased(evt);
+            }
+        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/id_card.png"))); // NOI18N
 
@@ -1019,7 +1024,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         );
         frmRegistrar_asistenciaLayout.setVerticalGroup(
             frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Card");
@@ -1242,15 +1247,24 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             frm.setVisible(rootPaneCheckingEnabled);
         }
     }
+    
+    void llamar_frmok(String code, boolean get_by_code) {
+        OpenERP oerp = hupernikao.BuildOpenERPConnection();
+        gl.Login_Collaborator = oerp.getCollaborator_by_code(code);
+        if (gl.Login_Collaborator != null) {
+            frmOK frm = new frmOK(this, true);
+            frm.setVisible(rootPaneCheckingEnabled);
+        }
+    }
 
-    void Aceptar() {
+    void register_with_login() {
         if (this.validar_cajas()) {
             String reg_username = txtusername.getText();
             String reg_password = txtpassword.getText();
 
             colaboradores_registrados colaboradores_registrados_obj = new colaboradores_registrados();
             OpenERP oerp = hupernikao.BuildOpenERPConnection();
-            RespRegistrarAsisitencia resp = oerp.RegisterAttendance(reg_username, reg_password);
+            RespRegistrarAsisitencia resp = oerp.RegisterAttendance_with_Login(reg_username, reg_password);
             switch (resp) {
                 case Error_login:
                     JOptionPane.showMessageDialog(null, "Nombre de Usuario o Password Incorrecto.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1301,6 +1315,46 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             }
         }
     }
+    void register_with_card() {
+        String code = txtcardcode.getText();
+        if ("".equals(code)) {
+            JOptionPane.showMessageDialog(null, "Primero pase la tarjeta por el lector", "Aviso", JOptionPane.WARNING_MESSAGE);
+            this.txtusername.requestFocus();
+        } else {
+            colaboradores_registrados colaboradores_registrados_obj = new colaboradores_registrados();
+            OpenERP oerp = hupernikao.BuildOpenERPConnection();
+            RespRegistrarAsisitencia resp = oerp.RegisterAttendance_with_Card(code);
+            this.txtcardcode.setText("");
+            this.txtcardcode.requestFocus();
+            switch (resp) {
+                case Error_Card:
+                    JOptionPane.showMessageDialog(null, "El código de la tarjeta no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case No_Collaborator:
+                    JOptionPane.showMessageDialog(null, "El código de la tarjeta no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case No_staff:
+                    JOptionPane.showMessageDialog(null, "No estas en la lista de colaboradores asignados para este evento.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case No_events:
+                    JOptionPane.showMessageDialog(null, "No hay eventos disponibles para registrar tu asistencia.", "Error", JOptionPane.ERROR_MESSAGE);
+                    ReloadInformation();
+                    break;
+                case Already_register:
+                    JOptionPane.showMessageDialog(null, "Ya has registrado tu asistencia para este evento.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case Already_checkout:
+                    JOptionPane.showMessageDialog(null, "Ya has registrado tu salida en este evento.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case checkin:
+                    colaboradores_registrados_obj.start();
+                    llamar_frmok(code,true);
+                    break;
+                case checkout:
+                    break;
+            }
+        }
+    }
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         ReloadInformation();
@@ -1322,12 +1376,12 @@ public class frmRegister_attendance extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        Aceptar();
+        register_with_login();
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void txtpasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpasswordKeyPressed
         if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13) {
-            Aceptar();
+            register_with_login();
         }
     }//GEN-LAST:event_txtpasswordKeyPressed
 
@@ -1336,7 +1390,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             if ("".equals(txtpassword.getText())) {
                 txtpassword.requestFocus();
             } else {
-                Aceptar();
+                register_with_login();
             }
         }
     }//GEN-LAST:event_txtusernameKeyPressed
@@ -1429,6 +1483,14 @@ public class frmRegister_attendance extends javax.swing.JFrame {
     private void txtcardcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcardcodeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtcardcodeActionPerformed
+
+    private void txtcardcodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcardcodeKeyReleased
+        if (evt.getKeyCode() == 10 || evt.getKeyCode() == 13) {
+            if (!"".equals(this.txtcardcode.getText())) {
+                register_with_card();
+            }
+        }   
+    }//GEN-LAST:event_txtcardcodeKeyReleased
 
     /**
      * @param args the command line arguments
