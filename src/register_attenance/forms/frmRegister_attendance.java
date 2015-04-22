@@ -22,18 +22,17 @@ import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.Timer;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import register_attenance.Collaborator;
 import register_attenance.Event;
 import register_attenance.OpenERP;
-import register_attenance.gl;
-import register_attenance.Threads;
-import register_attenance.hupernikao;
 import register_attenance.OpenERP.RespRegistrarAsisitencia;
+import register_attenance.gl;
+import register_attenance.hupernikao;
 
 /**
  *
@@ -1247,7 +1246,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             frm.setVisible(rootPaneCheckingEnabled);
         }
     }
-    
+
     void llamar_frmok(String code, boolean get_by_code) {
         OpenERP oerp = hupernikao.BuildOpenERPConnection();
         gl.Login_Collaborator = oerp.getCollaborator_by_code(code);
@@ -1489,7 +1488,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
             if (!"".equals(this.txtcardcode.getText())) {
                 register_with_card();
             }
-        }   
+        }
     }//GEN-LAST:event_txtcardcodeKeyReleased
 
     /**
@@ -1499,7 +1498,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
