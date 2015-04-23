@@ -128,7 +128,7 @@
         <Component class="javax.swing.JButton" name="btnReload">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Imagenes/gtk-refresh.png"/>
+              <Image iconType="3" name="/Imagenes/refresh_2.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Recargar los eventos."/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -143,7 +143,7 @@
         <Component class="javax.swing.JButton" name="btnCloseSession">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Imagenes/close_session_16.png"/>
+              <Image iconType="3" name="/Imagenes/logout_2.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Cerrar sesi&#xf3;n"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -228,7 +228,7 @@
     <Component class="javax.swing.JLabel" name="lblBanner">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Imagenes/Heading image.png"/>
+          <Image iconType="3" name="/Imagenes/kesker_96x96.png"/>
         </Property>
       </Properties>
     </Component>
@@ -381,7 +381,7 @@
                       <Component id="txtCollaborator" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" pref="280" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="282" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblcolaboradores_registrados" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -503,7 +503,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jTabbedPane1" alignment="0" pref="231" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" alignment="0" pref="246" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

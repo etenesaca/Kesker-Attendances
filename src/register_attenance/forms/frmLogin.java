@@ -22,7 +22,7 @@ public class frmLogin extends javax.swing.JFrame {
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
-                getImage(getClass().getResource("/Imagenes/login.png"));
+                getImage(getClass().getResource("/Imagenes/Register-icon-96.png"));
         return retValue;
     }
     /**
@@ -46,11 +46,12 @@ public class frmLogin extends javax.swing.JFrame {
         txtpassword = new javax.swing.JPasswordField();
         btnOk = new javax.swing.JButton();
         txtusername = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         btnConfig = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        user = new javax.swing.JLabel();
+        Contraseña = new javax.swing.JLabel();
 
         jMenu1.setText("jMenu1");
 
@@ -64,17 +65,19 @@ public class frmLogin extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtpassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtpasswordKeyPressed(evt);
             }
         });
+        getContentPane().add(txtpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 170, 200, -1));
 
         btnOk.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
-        btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/STOCK_OK.png"))); // NOI18N
+        btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/go_01.png"))); // NOI18N
         btnOk.setMnemonic('A');
-        btnOk.setText("Iniciar sesión");
+        btnOk.setText("Login");
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOkActionPerformed(evt);
@@ -85,23 +88,19 @@ public class frmLogin extends javax.swing.JFrame {
                 btnOkKeyPressed(evt);
             }
         });
+        getContentPane().add(btnOk, new org.netbeans.lib.awtextra.AbsoluteConstraints(195, 204, -1, -1));
 
         txtusername.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtusernameKeyPressed(evt);
             }
         });
-
-        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
-        jLabel1.setText("Nombre de usuario");
-
-        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
-        jLabel2.setText("Contraseña");
+        getContentPane().add(txtusername, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 119, 200, -1));
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        btnConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Connection.png"))); // NOI18N
+        btnConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cloud_db2.png"))); // NOI18N
         btnConfig.setToolTipText("Configurar los parámetros de conexión con el sistema.");
         btnConfig.setFocusable(false);
         btnConfig.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -113,52 +112,24 @@ public class frmLogin extends javax.swing.JFrame {
         });
         jToolBar1.add(btnConfig);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Register-icon-96.png"))); // NOI18N
+        getContentPane().add(jToolBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 37, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(txtusername)
-                            .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtusername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnOk))))
-        );
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/kesker_96x96.png"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 12, -1, 86));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/bg_3.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, -50, 300, 300));
+
+        user.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
+        user.setForeground(java.awt.Color.black);
+        user.setText("User");
+        getContentPane().add(user, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, -1, -1));
+
+        Contraseña.setFont(new java.awt.Font("Ubuntu", 1, 13)); // NOI18N
+        Contraseña.setForeground(java.awt.Color.black);
+        Contraseña.setText("Pass");
+        getContentPane().add(Contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 150, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -292,15 +263,16 @@ public class frmLogin extends javax.swing.JFrame {
          */
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Contraseña;
     private javax.swing.JButton btnConfig;
     private javax.swing.JButton btnOk;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPasswordField txtpassword;
     private javax.swing.JTextField txtusername;
+    private javax.swing.JLabel user;
     // End of variables declaration//GEN-END:variables
 }

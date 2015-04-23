@@ -44,7 +44,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     @Override
     public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Imagenes/icon.png"));
+        Image retValue = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Imagenes/kesker_200x200.png"));
         return retValue;
     }
 
@@ -664,7 +664,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton1);
 
-        btnReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/gtk-refresh.png"))); // NOI18N
+        btnReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/refresh_2.png"))); // NOI18N
         btnReload.setToolTipText("Recargar los eventos.");
         btnReload.setFocusable(false);
         btnReload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -677,7 +677,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         });
         jToolBar1.add(btnReload);
 
-        btnCloseSession.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/close_session_16.png"))); // NOI18N
+        btnCloseSession.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logout_2.png"))); // NOI18N
         btnCloseSession.setToolTipText("Cerrar sesión");
         btnCloseSession.setFocusable(false);
         btnCloseSession.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -728,7 +728,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        lblBanner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Heading image.png"))); // NOI18N
+        lblBanner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/kesker_96x96.png"))); // NOI18N
 
         pnlHora.setBorder(null);
 
@@ -900,7 +900,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
                     .addComponent(btnClearSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCollaborator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblcolaboradores_registrados))
         );
@@ -1024,7 +1024,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         );
         frmRegistrar_asistenciaLayout.setVerticalGroup(
             frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Card");
