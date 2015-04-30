@@ -44,7 +44,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
 
     @Override
     public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Imagenes/kesker_200x200.png"));
+        Image retValue = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Imagenes/kesker.png"));
         return retValue;
     }
 
@@ -1024,7 +1024,7 @@ public class frmRegister_attendance extends javax.swing.JFrame {
         );
         frmRegistrar_asistenciaLayout.setVerticalGroup(
             frmRegistrar_asistenciaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Card");
